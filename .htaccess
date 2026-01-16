@@ -1,0 +1,12 @@
+Options -Indexes
+ErrorDocument 403 /?p=not_found
+ErrorDocument 404 /?p=not_found
+
+# Turn mod_rewrite on
+RewriteEngine On
+RewriteBase /
+RewriteCond %{HTTPS} off 
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=302]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php?p=$1 [L,QSA]
