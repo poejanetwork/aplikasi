@@ -49,98 +49,26 @@ class App {
     }
     initLeftSidebar() {
         var e;
-        if ($(".side-nav").length) {
-            e = $(".side-nav li .collapse");
-
-            $(".side-nav li [data-bs-toggle='collapse']").on("click", function (e) {
-                return !1;
-            });
-
-            e.on({
-                "show.bs.collapse": function (e) {
-                    var t = $(e.target).parents(".collapse.show");
-                    $(".side-nav .collapse.show").not(e.target).not(t).collapse("hide");
-                }
-            });
-
-            const urlParams = new URLSearchParams(window.location.search);
-            const currentPage = urlParams.get('p');
-
-            const isActivePage = (pageName, checkPages) => {
-                if (!pageName) return false;
-                if (Array.isArray(checkPages)) {
-                    return checkPages.includes(pageName);
-                }
-                return pageName === checkPages;
-            };
-
-            // Reset semua menu ke kondisi nonaktif
-            document.querySelectorAll('.side-nav-item').forEach(item => {
-                item.classList.remove('active');
-                const link = item.querySelector('.side-nav-link');
-                if (link) {
-                    link.classList.remove('active');
-                    link.setAttribute('aria-expanded', 'false');
-                }
-                const collapseEl = item.querySelector('.collapse');
-                if (collapseEl) collapseEl.classList.remove('show');
-            });
-
-            // Set menu berdasarkan data-pagename yang relevan
-            document.querySelectorAll('.side-nav-item[data-pagename]').forEach(item => {
-                const names = item.dataset.pagename.split(',').map(x => x.trim());
-                const link = item.querySelector('.side-nav-link');
-                const collapseEl = item.querySelector('.collapse');
-                const isDashboard = (!currentPage && names.includes('dashboard'));
-                const isActiveMenu = currentPage && isActivePage(currentPage, names);
-
-                if (isActiveMenu || isDashboard) {
-                    item.classList.add('active');
-                    if (link) {
-                        link.classList.add('active');
-                        link.setAttribute('aria-expanded', 'true');
-                    }
-                    if (collapseEl) collapseEl.classList.add('show');
-                }
-            });
-
-            // Tambahkan active untuk submenu berdasarkan href
-            if (currentPage) {
-                document.querySelectorAll('.side-nav-item a.side-nav-link').forEach(link => {
-                    const href = new URL(link.href, window.location.origin);
-                    const pParam = href.searchParams.get('p');
-
-                    if (pParam === currentPage) {
-                        link.classList.add('active');
-                        const parentItem = link.closest('.side-nav-item[data-pagename] .collapse ul.sub-menu side-nav-item');
-                        if (parentItem) {
-                            parentItem.classList.add('active');
-                            const parentToggle = parentItem.querySelector('[data-bs-toggle="collapse"]');
-                            if (parentToggle) parentToggle.setAttribute('aria-expanded', 'true');
-                        }
-                    }
-                });
+        $(".side-nav").length && (e = $(".side-nav li .collapse"), $(".side-nav li [data-bs-toggle='collapse']").on("click", function(e) {
+            return !1
+        }), e.on({
+            "show.bs.collapse": function(e) {
+                var t = $(e.target).parents(".collapse.show");
+                $(".side-nav .collapse.show").not(e.target).not(t).collapse("hide")
             }
+        }), $(".side-nav a").each(function() {
+            var e = window.location.href.split(/[?#]/)[0];
+            this.href == e && ($(this).addClass("active"), $(this).parent().addClass("active"), $(this).parent().parent().parent().addClass("show"), $(this).parent().parent().parent().parent().addClass("active"), "sidebar-menu" !== (e = $(this).parent().parent().parent().parent().parent().parent()).attr("id") && e.addClass("show"), $(this).parent().parent().parent().parent().parent().parent().parent().addClass("active"), "wrapper" !== (e = $(this).parent().parent().parent().parent().parent().parent().parent().parent().parent()).attr("id") && e.addClass("show"), (e = $(this).parent().parent().parent().parent().parent().parent().parent().parent().parent().parent()).is("body") || e.addClass("active"))
+        }), setTimeout(function() {
+            var e, n, i, o, r, l, t = document.querySelector("li.active .active");
 
-            // Scroll animasi ke item aktif
-            setTimeout(function () {
-                var e, n, i, o, r, l, t = document.querySelector("li.active .active");
-                function d() {
-                    e = l += 20, t = o, a = r;
-                    var e, t, a = (e /= i / 2) < 1
-                        ? a / 2 * e * e + t
-                        : -a / 2 * (--e * (e - 2) - 1) + t;
-                    n.scrollTop = a, l < i && setTimeout(d, 20);
-                }
-                if (t != null) {
-                    e = document.querySelector(".sidenav-menu .simplebar-content-wrapper");
-                    t = t.offsetTop - 300;
-                    if (e && t > 100) {
-                        i = 600; o = (n = e).scrollTop; r = t - o; l = 0; d();
-                    }
-                }
-            }, 200);
-        }
+            function d() {
+                e = l += 20, t = o, a = r;
+                var e, t, a = (e /= i / 2) < 1 ? a / 2 * e * e + t : -a / 2 * (--e * (e - 2) - 1) + t;
+                n.scrollTop = a, l < i && setTimeout(d, 20)
+            }
+            null != t && (e = document.querySelector(".sidenav-menu .simplebar-content-wrapper"), t = t.offsetTop - 300, e && 100 < t && (i = 600, o = (n = e).scrollTop, r = t - o, l = 0, d()))
+        }, 200))
     }
     initTopbarMenu() {
         $(".navbar-nav").length && ($(".navbar-nav li a").each(function() {

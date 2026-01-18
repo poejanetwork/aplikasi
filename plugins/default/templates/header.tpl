@@ -36,7 +36,7 @@
         <div class="sidenav-menu">
 
             <!-- Brand Logo -->
-            <a href="{$BASE_URL}" class="logo">
+            <a href="{$BASE_URL}{$ADMIN_URL}" class="logo">
                 <span class="logo-light">
                     <span class="logo-lg"><img src="{$theme}/assets/images/logo.png" alt="logo"></span>
                     <span class="logo-sm text-center"><img src="{$theme}/assets/images/logo-sm.png" alt="small logo"></span>
@@ -64,7 +64,7 @@
                 <ul class="side-nav">
 
                     <li class="side-nav-item" data-pagename="dashboard">
-                        <a href="{$BASE_URL}" class="side-nav-link">
+                        <a href="dashboard" class="side-nav-link">
                             <span class="menu-icon"><i class="ti ti-dashboard"></i></span>
                             <span class="menu-text"> Dashboard </span>
                         </a>
@@ -73,21 +73,43 @@
                     <li class="side-nav-title mt-2">Apps Menu</li>
 
                     <li class="side-nav-item " data-pagename="users,user_group">
-                        <a data-bs-toggle="collapse" href="#sidebarInvoice1" aria-expanded="false" aria-controls="sidebarInvoice1" class="side-nav-link">
+                        <a data-bs-toggle="collapse" href="#sidebarUsers1" aria-expanded="false" aria-controls="sidebarUsers1" class="side-nav-link">
                             <span class="menu-icon"><i class="ti ti-file-invoice"></i></span>
                             <span class="menu-text"> Users</span>
                             <span class="menu-arrow"></span>
                         </a>
-                        <div class="collapse" id="sidebarInvoice1">
+                        <div class="collapse" id="sidebarUsers1">
                             <ul class="sub-menu">
                                 <li class="side-nav-item">
-                                    <a href="?p=users" class="side-nav-link">
+                                    <a href="users" class="side-nav-link">
                                         <span class="menu-text">Lihat User</span>
                                     </a>
                                 </li>
                                 <li class="side-nav-item">
-                                    <a href="?p=user_group" class="side-nav-link">
+                                    <a href="user_group" class="side-nav-link">
                                         <span class="menu-text">User Group</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+
+                    <li class="side-nav-item " data-pagename="users,user_group">
+                        <a data-bs-toggle="collapse" href="#sidebarSurat1" aria-expanded="false" aria-controls="sidebarSurat1" class="side-nav-link">
+                            <span class="menu-icon"><i class="ti ti-mail-opened-filled"></i></span>
+                            <span class="menu-text"> Surat</span>
+                            <span class="menu-arrow"></span>
+                        </a>
+                        <div class="collapse" id="sidebarSurat1">
+                            <ul class="sub-menu">
+                                <li class="side-nav-item">
+                                    <a href="sm" class="side-nav-link">
+                                        <span class="menu-text">Surat Masuk</span>
+                                    </a>
+                                </li>
+                                <li class="side-nav-item">
+                                    <a href="sk" class="side-nav-link">
+                                        <span class="menu-text">Surat Keluar</span>
                                     </a>
                                 </li>
                             </ul>
@@ -178,7 +200,7 @@
                 <div class="d-flex align-items-center gap-2">
 
                     <!-- Brand Logo -->
-                    <a href="{$BASE_URL}" class="logo">
+                    <a href="{$BASE_URL}{$ADMIN_URL}" class="logo">
                         <span class="logo-light">
                             <span class="logo-lg"><img src="{$theme}/assets/images/logo.png" alt="logo"></span>
                             <span class="logo-sm"><img src="{$theme}/assets/images/logo-sm.png" alt="small logo"></span>
@@ -263,7 +285,7 @@
                                 <div class="dropdown-divider"></div>
 
                                 <!-- item-->
-                                <a href="?p=logout" class="dropdown-item active fw-semibold text-danger">
+                                <a href="logout" class="dropdown-item active fw-semibold text-danger">
                                     <i class="ti ti-logout me-1 fs-17 align-middle"></i>
                                     <span class="align-middle">Sign Out</span>
                                 </a>
