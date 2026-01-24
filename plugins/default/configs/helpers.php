@@ -101,6 +101,9 @@ function requireAdmin(): void
         exit;
     }
 }
+function surl($path = '') {
+    return "/" . env('ADMIN_URL'). "/" . ltrim($path, '/');
+}
 
 
 function logDebug($msg = null){
@@ -129,11 +132,55 @@ function getRealIpAddr(){
         }
     }
 }
+function response_json($number, $type = false, $message){
+    http_response_code($number);
+    echo json_encode(['status' => $type, 'message' => $message]);
+}
+
 // detect user agent and IP
 $getUserAgent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : "";
 $getUserIp = getRealIpAddr();
 
 // secondary function
+function date_format_id($date, $with_time = false)
+{
+    if (empty($date) || $date === '0000-00-00') {
+        return '-';
+    }
+
+    $bulan = [
+        1 => 'Januari',
+        2 => 'Februari',
+        3 => 'Maret',
+        4 => 'April',
+        5 => 'Mei',
+        6 => 'Juni',
+        7 => 'Juli',
+        8 => 'Agustus',
+        9 => 'September',
+        10 => 'Oktober',
+        11 => 'November',
+        12 => 'Desember'
+    ];
+
+    $timestamp = strtotime($date);
+    if (!$timestamp) {
+        return $date; // fallback aman
+    }
+
+    $day   = date('d', $timestamp);
+    $month = (int) date('m', $timestamp);
+    $year  = date('Y', $timestamp);
+
+    $result = $day . ' ' . $bulan[$month] . ' ' . $year;
+
+    if ($with_time) {
+        $result .= ' ' . date('H:i', $timestamp);
+    }
+
+    return $result;
+}
+
 
 /**
  * Validator lengkap untuk form dan file upload.
@@ -259,17 +306,18 @@ function validateFields(array $data, array $files, array $rules, array $messages
 
 function pdo_select(
     $table,
-    $where = array(),
+    $where = [],
     $fields = '*',
-    $joins = array(),
-    $rules = array(),
+    $joins = [],
+    $rules = [],
     $limit = null,
-    $order = null
+    $order = null,
+    $search = [] // NEW
 ) {
     $conn = getDBConnection();
 
     if ($rules) {
-        $validation = validateFields($where, array(), $rules);
+        $validation = validateFields($where, [], $rules);
         if (!$validation['status']) {
             return ['errors' => getErrorCode(25)];
         }
@@ -279,108 +327,297 @@ function pdo_select(
         $fields = implode(',', $fields);
     }
 
-    $sql = "SELECT $fields FROM $table";
+    $sql = "SELECT {$fields} FROM {$table}";
+    $params = [];
 
-    // JOIN
-    if (!empty($joins) && is_array($joins)) {
+    /* ======================
+       JOIN
+    ====================== */
+    if (!empty($joins)) {
         foreach ($joins as $join) {
-            $joinType = strtoupper($join['type'] ?? 'LEFT');
-            $joinTable = $join['table'] ?? '';
-            $joinOn = $join['on'] ?? '';
-            if ($joinTable && $joinOn) {
-                $sql .= " $joinType JOIN $joinTable ON $joinOn";
+            $type  = strtoupper($join['type'] ?? 'LEFT');
+            $tableJoin = $join['table'] ?? '';
+            $on    = $join['on'] ?? '';
+            if ($tableJoin && $on) {
+                $sql .= " {$type} JOIN {$tableJoin} ON {$on}";
             }
         }
     }
 
-    // WHERE
-    if (!empty($where)) {
-        $conditions = [];
-        foreach ($where as $k => $v) {
-            $param = str_replace('.', '_', $k);
-            $conditions[] = "$k = :$param";
-        }
-        $sql .= " WHERE " . implode(" AND ", $conditions);
+    /* ======================
+       WHERE (EQUAL)
+    ====================== */
+    $conditions = [];
+
+    foreach ($where as $col => $val) {
+        $param = str_replace('.', '_', $col);
+        $conditions[] = "{$col} = :{$param}";
+        $params[$param] = $val;
     }
 
-    // ORDER
-    if (!is_null($order)) {
+    /* ======================
+       SEARCH (LIKE)
+    ====================== */
+    if (!empty($search['keyword']) && !empty($search['columns'])) {
+        $likeParts = [];
+        foreach ($search['columns'] as $i => $col) {
+            $p = "search_{$i}";
+            $likeParts[] = "{$col} LIKE :{$p}";
+            $params[$p] = '%' . $search['keyword'] . '%';
+        }
+        $conditions[] = '(' . implode(' OR ', $likeParts) . ')';
+    }
+
+    if (!empty($conditions)) {
+        $sql .= ' WHERE ' . implode(' AND ', $conditions);
+    }
+
+    /* ======================
+       ORDER
+    ====================== */
+    if ($order) {
         if (is_array($order)) {
-            $orderClauses = [];
+            $orders = [];
             foreach ($order as $col => $dir) {
-                $dir = strtoupper($dir) === 'DESC' ? 'DESC' : 'ASC';
-                $orderClauses[] = "$col $dir";
+                $orders[] = "{$col} " . (strtoupper($dir) === 'DESC' ? 'DESC' : 'ASC');
             }
-            $sql .= " ORDER BY " . implode(', ', $orderClauses);
-        } elseif (is_string($order)) {
-            $sql .= " ORDER BY $order";
+            $sql .= ' ORDER BY ' . implode(', ', $orders);
+        } else {
+            $sql .= " ORDER BY {$order}";
         }
     }
 
-    // LIMIT (support int dan "offset,limit")
-    if (!is_null($limit)) {
-        if (is_int($limit)) {
-            $sql .= " LIMIT $limit";
-        } elseif (is_string($limit)) {
-            $sql .= " LIMIT $limit";
-        }
+    /* ======================
+       LIMIT
+    ====================== */
+    if ($limit !== null) {
+        $sql .= " LIMIT {$limit}";
     }
 
     $stmt = $conn->prepare($sql);
-
-    foreach ($where as $k => $v) {
-        $param = str_replace('.', '_', $k);
-        $stmt->bindValue(":$param", $v);
+    foreach ($params as $k => $v) {
+        $stmt->bindValue(":{$k}", $v);
     }
 
     $stmt->execute();
-    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-    if(count($result)<=1){
-        return $result[0] ?? [];
-    }
-    if ($limit !== null) {
-        return $result ?: [];
-    }
+    return $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
 }
-function pdo_paginate($table, $fields, $offset, $limit)
-{
+
+function pdo_select_first(
+    $table,
+    $where = [],
+    $fields = '*',
+    $joins = [],
+    $order = null,
+    $search = []
+) {
+    $data = pdo_select(
+        $table,
+        $where,
+        $fields,
+        $joins,
+        [],
+        1,
+        $order,
+        $search
+    );
+
+    return $data[0] ?? [];
+}
+function pdo_paginate(
+    $table,
+    $fields,
+    $offset,
+    $limit,
+    $joins = [],
+    $where = [],
+    $order = 'id DESC',
+    $search = []
+) {
     return pdo_select(
         $table,
-        [],
+        $where,
         $fields,
+        $joins,
         [],
-        [],
-        "$offset, $limit"
+        "{$offset}, {$limit}",
+        $order,
+        $search
     );
 }
 
-function pdo_insert($table, $data, $rules)
-{
-    $conn = getDBConnection();
-    // Validasi input
-    if ($rules) {
-        $validation = validateFields($data, array(), $rules);
-        if (!$validation['status']) {
-            return ['errors' => getErrorCode(25)];
+    function pdo_insert($table, $data, $rules = [])
+    {
+        $conn = getDBConnection();
+
+        // validasi input
+        if ($rules) {
+            $validation = validateFields($data, [], $rules);
+            if (!$validation['status']) {
+                return [
+                    'errors' => [
+                        'code'    => 422,
+                        'type'    => 'validation',
+                        'message' => 'Validasi gagal',
+                        'detail'  => $validation['errors'] ?? []
+                    ]
+                ];
+            }
+        }
+
+        unset($data['_method']);
+
+        $cols = array_keys($data);
+        $fields = implode(',', $cols);
+        $placeholders = ':' . implode(',:', $cols);
+
+        try {
+            $sql = "INSERT INTO {$table} ({$fields}) VALUES ({$placeholders})";
+            $stmt = $conn->prepare($sql);
+
+            foreach ($data as $k => $v) {
+                $stmt->bindValue(":{$k}", $v);
+            }
+
+            $stmt->execute();
+
+            return (int)$conn->lastInsertId();
+
+        } catch (PDOException $e) {
+            // mapping error MySQL
+            $errorInfo = $e->errorInfo; // [SQLSTATE, error_code, message]
+            $errorCode = $errorInfo[1] ?? null;
+            $message = getErrorCode($errorCode);
+
+            logDebug([
+                'errorCode' => $errorCode,
+                'type' => 'PDO_INSERT_ERROR',
+                'table' => $table,
+                'error' => $e->getMessage()
+            ]);
+
+            return [
+                'errors' => [
+                    'code'    => 500,
+                    'type'    => 'database',
+                    'message' => $message
+                ]
+            ];
         }
     }
-    // Hapus field tidak relevan
-    // unset($data['act'], $data['form_id'], $data['form_token'], $data['form_sig']);
-    unset($data['_method']);
 
-    $cols = array_keys($data);
-    $fields = implode(',', $cols);
-    $placeholders = ':' . implode(',:', $cols);
 
-    $sql = "INSERT INTO $table ($fields) VALUES ($placeholders)";
-    $stmt = $conn->prepare($sql);
-    foreach ($data as $k => $v) {
-        $stmt->bindValue(":$k", $v);
+    function pdo_reorder_insert(
+        $table,
+        $column,
+        $newPosition,
+        $pk = 'id',
+        $offset = 10000
+    ) {
+        $conn = getDBConnection();
+
+        // 1. dorong ke zona aman
+        $stmt1 = $conn->prepare("
+            UPDATE {$table}
+            SET {$column} = {$column} + :offset
+            WHERE {$column} >= :pos
+        ");
+        $stmt1->execute([
+            ':offset' => $offset,
+            ':pos'    => $newPosition
+        ]);
+
+        // 2. tarik balik ke posisi final
+        $stmt2 = $conn->prepare("
+            UPDATE {$table}
+            SET {$column} = {$column} - :offset + 1
+            WHERE {$column} >= :pos + :offset1
+        ");
+        $stmt2->execute([
+            ':offset' => $offset,
+            ':offset1' => $offset,
+            ':pos'    => $newPosition
+        ]);
+
+        return true;
     }
-    $stmt->execute();
-    return $conn->lastInsertId();
-}
+
+
+    function pdo_reorder_update(
+        $table,
+        $column,
+        $old,
+        $new,
+        $excludeId,
+        $pk = 'id',
+        $offset = 10000
+    ) {
+        if ($old === $new) {
+            return true;
+        }
+
+        $conn = getDBConnection();
+
+        if ($new < $old) {
+            // naik
+            // 1. push ke zona aman
+            $conn->prepare("
+                UPDATE {$table}
+                SET {$column} = {$column} + :offset
+                WHERE {$column} >= :new
+                AND {$column} < :old
+                AND {$pk} != :id
+            ")->execute([
+                ':offset' => $offset,
+                ':new'    => $new,
+                ':old'    => $old,
+                ':id'     => $excludeId
+            ]);
+
+            // 2. tarik balik
+            $conn->prepare("
+                UPDATE {$table}
+                SET {$column} = {$column} - :offset + 1
+                WHERE {$column} >= :new + :offset1
+                AND {$column} < :old + :offset2
+            ")->execute([
+                ':offset' => $offset,
+                ':offset1' => $offset,
+                ':offset2' => $offset,
+                ':new'    => $new,
+                ':old'    => $old
+            ]);
+        } else {
+            // turun
+            $conn->prepare("
+                UPDATE {$table}
+                SET {$column} = {$column} + :offset
+                WHERE {$column} <= :new
+                AND {$column} > :old
+                AND {$pk} != :id
+            ")->execute([
+                ':offset' => $offset,
+                ':new'    => $new,
+                ':old'    => $old,
+                ':id'     => $excludeId
+            ]);
+
+            $conn->prepare("
+                UPDATE {$table}
+                SET {$column} = {$column} - :offset - 1
+                WHERE {$column} <= :new + :offset1
+                AND {$column} > :old + :offset2
+            ")->execute([
+                ':offset' => $offset,
+                ':offset1' => $offset,
+                ':offset2' => $offset,
+                ':new'    => $new,
+                ':old'    => $old
+            ]);
+        }
+
+        return true;
+    }
 
     function pdo_update($table, $data, $where, $rules = [])
     {
@@ -453,7 +690,7 @@ function pdo_insert($table, $data, $rules)
     {
         $conn = getDBConnection();
 
-        $allowedTables = ['users', 'roles', 'satuan'];
+        $allowedTables = ['users', 'surat_masuk', 'disposisi'];
         if (!in_array($table, $allowedTables, true)) {
             return false;
         }
@@ -488,26 +725,114 @@ function pdo_insert($table, $data, $rules)
         return $stmt->execute($params);
     }
 
-    function pdo_count($table, $where = [])
+    function pdo_count($table, $where = [], $search = [])
     {
         $conn = getDBConnection();
-
         $sql = "SELECT COUNT(*) FROM {$table}";
+        $conditions = [];
         $params = [];
 
-        if (!empty($where)) {
-            $conditions = [];
-            foreach ($where as $key => $value) {
-                $conditions[] = "{$key} ?";
-                $params[] = $value;
+        foreach ($where as $col => $val) {
+            $conditions[] = "{$col} = ?";
+            $params[] = $val;
+        }
+
+        if (!empty($search['keyword']) && !empty($search['columns'])) {
+            $likes = [];
+            foreach ($search['columns'] as $col) {
+                $likes[] = "{$col} LIKE ?";
+                $params[] = '%' . $search['keyword'] . '%';
             }
-            $sql .= " WHERE " . implode(' AND ', $conditions);
+            $conditions[] = '(' . implode(' OR ', $likes) . ')';
+        }
+
+        if ($conditions) {
+            $sql .= ' WHERE ' . implode(' AND ', $conditions);
         }
 
         $stmt = $conn->prepare($sql);
         $stmt->execute($params);
-
         return (int) $stmt->fetchColumn();
+    }
+
+
+    function upload_file(array $file, array $config = [])
+    {
+        $defaults = [
+            'upload_path' => 'public/uploads',
+            'allowed_mime' => [],
+            'max_size' => 5 * 1024 * 1024, // 5MB
+            'prefix' => 'file',
+            'use_date_folder' => true
+        ];
+
+        $config = array_merge($defaults, $config);
+
+        if ($file['error'] !== UPLOAD_ERR_OK) {
+            response_json(400, false, 'Upload error');
+            return;
+        }
+
+        if (!empty($config['allowed_mime']) &&
+            !array_key_exists($file['type'], $config['allowed_mime'])) {
+            response_json(400, false, 'Format file tidak diizinkan');
+            return;
+        }
+
+        if ($file['size'] > $config['max_size']) {
+            response_json(400, false, 'Ukuran file terlalu besar');
+            return;
+        }
+
+        $ext = $config['allowed_mime'][$file['type']] ?? pathinfo($file['name'], PATHINFO_EXTENSION);
+
+        $year = date('Y');
+        $month = date('m');
+
+        $basePath = ROOT_PATH . '/' . trim($config['upload_path'], '/');
+        $urlPath = trim($config['upload_path'], '/');
+
+        if ($config['use_date_folder']) {
+            $basePath .= "/$year/$month";
+            $urlPath .= "/$year/$month";
+        }
+
+        if (!is_dir($basePath)) {
+            mkdir($basePath, 0755, true);
+        }
+
+        $filename = $config['prefix'] . '_' . time() . '_' . rand(100,999) . '.' . $ext;
+        $target = $basePath . '/' . $filename;
+        $urlPath .= '/' . $filename;
+
+        if (!move_uploaded_file($file['tmp_name'], $target)) {
+            response_json(400, false, 'Gagal menyimpan file');
+            return;
+        }
+
+        return [
+            'status' => true,
+            'data' => [
+                'file_path' => $urlPath,
+                'file_name' => $filename,
+                'file_original_name' => $file['name'],
+                'file_type' => $ext,
+                'file_size' => $file['size']
+            ]
+        ];
+    }
+    // use {$row.file_size|@format_file_size}
+    function format_file_size($bytes)
+    {
+        if ($bytes >= 1073741824) {
+            return number_format($bytes / 1073741824, 2) . ' GB';
+        } elseif ($bytes >= 1048576) {
+            return number_format($bytes / 1048576, 2) . ' MB';
+        } elseif ($bytes >= 1024) {
+            return number_format($bytes / 1024, 2) . ' KB';
+        }
+
+        return $bytes . ' B';
     }
 
     function logHistory(array $user, string $table, string $action, int $rowId, $oldData=null, $newData=null, $getUserIp, $getUserAgent){

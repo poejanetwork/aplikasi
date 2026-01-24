@@ -1,18 +1,18 @@
 <?php
-/* Smarty version 5.5.1, created on 2026-01-18 19:49:59
-  from 'file:surat_masuk/index.tpl' */
+/* Smarty version 5.5.1, created on 2026-01-24 08:29:46
+  from 'file:surat_keluar/index.tpl' */
 
 /* @var \Smarty\Template $_smarty_tpl */
 if ($_smarty_tpl->getCompiled()->isFresh($_smarty_tpl, array (
   'version' => '5.5.1',
-  'unifunc' => 'content_696cd6f7906849_77786191',
+  'unifunc' => 'content_6974208a702ea3_08627949',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
-    '636bf9af94ea56870937aa31b44d335de942b543' => 
+    '5d5680c19e513a0b9695f6772fb9e0ecdca9a59b' => 
     array (
-      0 => 'surat_masuk/index.tpl',
-      1 => 1768740113,
+      0 => 'surat_keluar/index.tpl',
+      1 => 1769218182,
       2 => 'file',
     ),
   ),
@@ -20,8 +20,8 @@ if ($_smarty_tpl->getCompiled()->isFresh($_smarty_tpl, array (
   array (
   ),
 ))) {
-function content_696cd6f7906849_77786191 (\Smarty\Template $_smarty_tpl) {
-$_smarty_current_dir = 'C:\\xampp\\htdocs\\apli.kasi\\plugins\\default\\templates\\surat_masuk';
+function content_6974208a702ea3_08627949 (\Smarty\Template $_smarty_tpl) {
+$_smarty_current_dir = 'C:\\xampp\\htdocs\\apli.kasi\\plugins\\default\\templates\\surat_keluar';
 ?><div class="row">
 	<div class="col-12">
 		<div class="page-title-head d-flex align-items-sm-center flex-sm-row flex-column">
@@ -39,7 +39,7 @@ $_smarty_current_dir = 'C:\\xampp\\htdocs\\apli.kasi\\plugins\\default\\template
             <div class="card-header border-bottom">
                 <div class="d-flex flex-wrap justify-content-between gap-2">
                     <div class="position-relative">
-                        <input type="text" id="searchInput" class="form-control ps-4" placeholder="Search Surat Masuk">
+                        <input type="text" id="searchInput" class="form-control ps-4" placeholder="Search Surat Keluar">
                         <i class="ti ti-search position-absolute top-50 translate-middle-y ms-2"></i>
                     </div>
 
@@ -54,7 +54,7 @@ $_smarty_current_dir = 'C:\\xampp\\htdocs\\apli.kasi\\plugins\\default\\template
                     <thead>
                         <tr>
                             <th width="80">ID</th>
-                            <th>Nomor Surat<br/>Asal Surat</th>
+                            <th>Nomor Surat<br/>Tujuan Surat</th>
                             <th>Perihal</th>
                             <th>Tanggal Surat</th>
                             <th>Aksi</th>

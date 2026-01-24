@@ -1,18 +1,18 @@
 <?php
-/* Smarty version 5.5.1, created on 2026-01-16 14:16:35
+/* Smarty version 5.5.1, created on 2026-01-18 19:04:52
   from 'file:users/create.tpl' */
 
 /* @var \Smarty\Template $_smarty_tpl */
 if ($_smarty_tpl->getCompiled()->isFresh($_smarty_tpl, array (
   'version' => '5.5.1',
-  'unifunc' => 'content_6969e5d3bae243_11812029',
+  'unifunc' => 'content_696ccc641c0ef5_26096776',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
     '1c72874c063d8778c42858563cb733bff1888619' => 
     array (
       0 => 'users/create.tpl',
-      1 => 1768547677,
+      1 => 1768737887,
       2 => 'file',
     ),
   ),
@@ -20,7 +20,7 @@ if ($_smarty_tpl->getCompiled()->isFresh($_smarty_tpl, array (
   array (
   ),
 ))) {
-function content_6969e5d3bae243_11812029 (\Smarty\Template $_smarty_tpl) {
+function content_696ccc641c0ef5_26096776 (\Smarty\Template $_smarty_tpl) {
 $_smarty_current_dir = 'C:\\xampp\\htdocs\\apli.kasi\\plugins\\default\\templates\\users';
 ?><form id="formAddUser">
     <div class="mb-3">
@@ -36,7 +36,7 @@ $_smarty_current_dir = 'C:\\xampp\\htdocs\\apli.kasi\\plugins\\default\\template
         <input type="text" id="password" name="password" class="form-control" value="" required>
     </div>
     <div class="text-end">
-        <button type="button" class="btn btn-light" data-bs-dismiss="modal">
+        <button type="button" class="btn btn-light me-3" data-bs-dismiss="modal">
             Batal
         </button>
         <button type="submit" class="btn btn-primary">

@@ -5,7 +5,7 @@
 
     function loadData(page = 1) {
         currentPage = page;
-        $.get(APP.getUrl + '/sm/data', {
+        $.get(APP.getUrl + '/disposisi/data', {
             page: page,
             search: currentSearch
         }, function (res) {
@@ -14,16 +14,15 @@
                 console.error('Invalid response', res);
                 return;
             }
+
             let rows = '';
 
             res.data.forEach(function (row) {
             let rowClass = row.status == 0 ? 'table-danger text-muted' : '';
                 rows += `
                     <tr class="${rowClass}">
-                        <td>${row.id}</td>
-                        <td>${row.nomor_surat}<br/>${row.asal_surat}</td>
-                        <td>${row.perihal}</td>
-                        <td>${row.tanggal_surat}</td>
+                        <td>${row.urutan}</td>
+                        <td>${row.nama}</td>
                         <td>
                             <div class="dropdown">
                                 <button class="btn btn-sm btn-light dropdown-toggle"
@@ -31,11 +30,6 @@
                                     Aksi
                                 </button>
                                 <div class="dropdown-menu">
-                                    <a class="dropdown-item text-primary"
-                                       href="javascript:void(0);"
-                                       onclick="showData(${row.id})">
-                                        <i class="ti ti-eye me-1"></i> Lihat
-                                    </a>
                                     <a class="dropdown-item text-primary"
                                        href="javascript:void(0);"
                                        onclick="editData(${row.id})">
@@ -110,29 +104,26 @@
         }, 400);
     });
 
-
     /* ===============================
        MODAL ADD & EDIT
     =============================== */
     window.addData = function (id) {
-        $('#dataModalTitle').text('Add Surat');
+        $('#dataModalTitle').text('Add Data');
         $('#dataModalBody').html('Loading...');
         $('#dataModal').modal('show');
 
         $('#dataModalBody').load(
-            APP.getUrl + '/sm/create/'
+            APP.getUrl + '/disposisi/create/'
         );
     };
     $(document).on('submit', '#formAddData', function (e) {
         e.preventDefault();
-        let formData = new FormData(this);
+        let form = $(this);
         $.ajax({
-            url: APP.getUrl + '/sm/store',
+            url: APP.getUrl + '/disposisi/store',
             type: 'POST',
-            data: formData,
+            data: form.serialize(),
             dataType: 'json',
-            processData: false,
-            contentType: false,
             success: function (res) {
                 if (res.status) {
                     $('#dataModal').modal('hide');
@@ -153,36 +144,24 @@
         });
     });
 
-    window.showData = function (id) {
-        $('#dataModalTitle').text('Lihat Data');
-        $('#dataModalBody').html('Loading...');
-        $('#dataModal').modal('show');
-
-        $('#dataModalBody').load(
-            APP.getUrl + '/sm/show/' + id
-        );
-    };
     window.editData = function (id) {
         $('#dataModalTitle').text('Edit Data');
         $('#dataModalBody').html('Loading...');
         $('#dataModal').modal('show');
 
         $('#dataModalBody').load(
-            APP.getUrl + '/sm/edit/' + id
+            APP.getUrl + '/disposisi/edit/' + id
         );
     };
     $(document).on('submit', '#formEditData', function (e) {
         e.preventDefault();
 
         let id = $(this).data('id');
-        let formData = new FormData(this);
-        formData.append('_method', 'PUT');
+
         $.ajax({
-            url: APP.getUrl + '/sm/update/' + id,
+            url: APP.getUrl + '/disposisi/update/' + id,
             type: 'POST',
-            data: formData,
-            processData: false,
-            contentType: false,
+            data: $(this).serialize() + '&_method=PUT',
             dataType: 'json',
             success: function (res) {
                 if (res.status) {
@@ -203,7 +182,6 @@
             }
         });
     });
-
 
     /* ===============================
        DELETE DATA
@@ -219,7 +197,7 @@
         }).then((result) => {
             if (result.isConfirmed) {
                 $.ajax({
-                    url: APP.getUrl + '/sm/delete/' + id,
+                    url: APP.getUrl + '/disposisi/delete/' + id,
                     type: 'POST',
                     data: { _method: 'DELETE' },
                     dataType: 'json',
@@ -246,7 +224,7 @@
         }).then((result) => {
             if (result.isConfirmed) {
                 $.ajax({
-                    url: APP.getUrl + '/sm/restore/' + id,
+                    url: APP.getUrl + '/disposisi/restore/' + id,
                     type: 'POST',
                     data: { _method: 'PATCH' },
                     dataType: 'json',

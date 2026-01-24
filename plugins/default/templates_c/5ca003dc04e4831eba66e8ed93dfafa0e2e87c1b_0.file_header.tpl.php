@@ -1,18 +1,18 @@
 <?php
-/* Smarty version 5.5.1, created on 2026-01-16 14:46:24
+/* Smarty version 5.5.1, created on 2026-01-24 11:26:12
   from 'file:header.tpl' */
 
 /* @var \Smarty\Template $_smarty_tpl */
 if ($_smarty_tpl->getCompiled()->isFresh($_smarty_tpl, array (
   'version' => '5.5.1',
-  'unifunc' => 'content_6969ecd0c75bc4_27779630',
+  'unifunc' => 'content_697449e43c1f15_75493907',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
     '5ca003dc04e4831eba66e8ed93dfafa0e2e87c1b' => 
     array (
       0 => 'header.tpl',
-      1 => 1768549500,
+      1 => 1769228542,
       2 => 'file',
     ),
   ),
@@ -20,7 +20,7 @@ if ($_smarty_tpl->getCompiled()->isFresh($_smarty_tpl, array (
   array (
   ),
 ))) {
-function content_6969ecd0c75bc4_27779630 (\Smarty\Template $_smarty_tpl) {
+function content_697449e43c1f15_75493907 (\Smarty\Template $_smarty_tpl) {
 $_smarty_current_dir = 'C:\\xampp\\htdocs\\apli.kasi\\plugins\\default\\templates';
 ?><!DOCTYPE html>
 <html lang="en">
@@ -61,6 +61,13 @@ $_smarty_current_dir = 'C:\\xampp\\htdocs\\apli.kasi\\plugins\\default\\template
     <!-- Icons css -->
     <link href="<?php echo $_smarty_tpl->getValue('theme');?>
 /assets/css/icons.min.css" rel="stylesheet" type="text/css" />
+	<?php $_prefixVariable1 = "news";
+$_smarty_tpl->assign('pagetype', $_prefixVariable1, false, NULL);
+if ($_prefixVariable1) {?>
+        <!-- Dropzone File Upload js -->
+    <link rel="stylesheet" href="<?php echo $_smarty_tpl->getValue('theme');?>
+/assets/vendor/dropzone/dropzone.min.css" type="text/css" />
+	<?php }?>
     
 </head>
 
@@ -107,7 +114,8 @@ echo $_smarty_tpl->getValue('ADMIN_URL');?>
                 <ul class="side-nav">
 
                     <li class="side-nav-item" data-pagename="dashboard">
-                        <a href="dashboard" class="side-nav-link">
+                        <a href="<?php echo $_smarty_tpl->getSmarty()->getModifierCallback('surl')('dashboard');?>
+" class="side-nav-link">
                             <span class="menu-icon"><i class="ti ti-dashboard"></i></span>
                             <span class="menu-text"> Dashboard </span>
                         </a>
@@ -124,12 +132,14 @@ echo $_smarty_tpl->getValue('ADMIN_URL');?>
                         <div class="collapse" id="sidebarUsers1">
                             <ul class="sub-menu">
                                 <li class="side-nav-item">
-                                    <a href="users" class="side-nav-link">
+                                    <a href="<?php echo $_smarty_tpl->getSmarty()->getModifierCallback('surl')('users');?>
+" class="side-nav-link">
                                         <span class="menu-text">Lihat User</span>
                                     </a>
                                 </li>
                                 <li class="side-nav-item">
-                                    <a href="user_group" class="side-nav-link">
+                                    <a href="<?php echo $_smarty_tpl->getSmarty()->getModifierCallback('surl')('user_group');?>
+" class="side-nav-link">
                                         <span class="menu-text">User Group</span>
                                     </a>
                                 </li>
@@ -146,13 +156,21 @@ echo $_smarty_tpl->getValue('ADMIN_URL');?>
                         <div class="collapse" id="sidebarSurat1">
                             <ul class="sub-menu">
                                 <li class="side-nav-item">
-                                    <a href="sm" class="side-nav-link">
+                                    <a href="<?php echo $_smarty_tpl->getSmarty()->getModifierCallback('surl')('sm');?>
+" class="side-nav-link">
                                         <span class="menu-text">Surat Masuk</span>
                                     </a>
                                 </li>
                                 <li class="side-nav-item">
-                                    <a href="sk" class="side-nav-link">
+                                    <a href="<?php echo $_smarty_tpl->getSmarty()->getModifierCallback('surl')('sk');?>
+" class="side-nav-link">
                                         <span class="menu-text">Surat Keluar</span>
+                                    </a>
+                                </li>
+                                <li class="side-nav-item">
+                                    <a href="<?php echo $_smarty_tpl->getSmarty()->getModifierCallback('surl')('disposisi');?>
+" class="side-nav-link">
+                                        <span class="menu-text">Pengaturan Disposisi</span>
                                     </a>
                                 </li>
                             </ul>
@@ -160,20 +178,22 @@ echo $_smarty_tpl->getValue('ADMIN_URL');?>
                     </li>
 
                     <li class="side-nav-item " data-pagename="news,news_category">
-                        <a data-bs-toggle="collapse" href="#sidebarInvoice2" aria-expanded="false" aria-controls="sidebarInvoice2" class="side-nav-link">
+                        <a data-bs-toggle="collapse" href="#sidebarNews2" aria-expanded="false" aria-controls="sidebarNews2" class="side-nav-link">
                             <span class="menu-icon"><i class="ti ti-news"></i></span>
                             <span class="menu-text"> Berita</span>
                             <span class="menu-arrow"></span>
                         </a>
-                        <div class="collapse" id="sidebarInvoice2">
+                        <div class="collapse" id="sidebarNews2">
                             <ul class="sub-menu">
                                 <li class="side-nav-item">
-                                    <a href="?p=news" class="side-nav-link">
+                                    <a href="<?php echo $_smarty_tpl->getSmarty()->getModifierCallback('surl')('news');?>
+" class="side-nav-link">
                                         <span class="menu-text">Lihat Berita</span>
                                     </a>
                                 </li>
                                 <li class="side-nav-item">
-                                    <a href="?p=news_category" class="side-nav-link">
+                                    <a href="<?php echo $_smarty_tpl->getSmarty()->getModifierCallback('surl')('news_category');?>
+" class="side-nav-link">
                                         <span class="menu-text">Kategori Berita</span>
                                     </a>
                                 </li>
@@ -182,7 +202,7 @@ echo $_smarty_tpl->getValue('ADMIN_URL');?>
                     </li>
 
                     <li class="side-nav-item " data-pagename="contents">
-                        <a href="?p=contents" class="side-nav-link">
+                        <a href="contents" class="side-nav-link">
                             <span class="menu-icon"><i class="ti ti-folder-filled"></i></span>
                             <span class="menu-text"> Menu </span>
                         </a>

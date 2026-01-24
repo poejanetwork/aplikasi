@@ -5,7 +5,7 @@
 
     function loadData(page = 1) {
         currentPage = page;
-        $.get(APP.getUrl + '/sm/data', {
+        $.get(APP.getUrl + '/sk/data', {
             page: page,
             search: currentSearch
         }, function (res) {
@@ -21,7 +21,7 @@
                 rows += `
                     <tr class="${rowClass}">
                         <td>${row.id}</td>
-                        <td>${row.nomor_surat}<br/>${row.asal_surat}</td>
+                        <td>${row.nomor_surat}<br/>${row.tujuan_surat}</td>
                         <td>${row.perihal}</td>
                         <td>${row.tanggal_surat}</td>
                         <td>
@@ -120,14 +120,14 @@
         $('#dataModal').modal('show');
 
         $('#dataModalBody').load(
-            APP.getUrl + '/sm/create/'
+            APP.getUrl + '/sk/create/'
         );
     };
     $(document).on('submit', '#formAddData', function (e) {
         e.preventDefault();
         let formData = new FormData(this);
         $.ajax({
-            url: APP.getUrl + '/sm/store',
+            url: APP.getUrl + '/sk/store',
             type: 'POST',
             data: formData,
             dataType: 'json',
@@ -159,7 +159,7 @@
         $('#dataModal').modal('show');
 
         $('#dataModalBody').load(
-            APP.getUrl + '/sm/show/' + id
+            APP.getUrl + '/sk/show/' + id
         );
     };
     window.editData = function (id) {
@@ -168,7 +168,7 @@
         $('#dataModal').modal('show');
 
         $('#dataModalBody').load(
-            APP.getUrl + '/sm/edit/' + id
+            APP.getUrl + '/sk/edit/' + id
         );
     };
     $(document).on('submit', '#formEditData', function (e) {
@@ -178,7 +178,7 @@
         let formData = new FormData(this);
         formData.append('_method', 'PUT');
         $.ajax({
-            url: APP.getUrl + '/sm/update/' + id,
+            url: APP.getUrl + '/sk/update/' + id,
             type: 'POST',
             data: formData,
             processData: false,
@@ -219,7 +219,7 @@
         }).then((result) => {
             if (result.isConfirmed) {
                 $.ajax({
-                    url: APP.getUrl + '/sm/delete/' + id,
+                    url: APP.getUrl + '/sk/delete/' + id,
                     type: 'POST',
                     data: { _method: 'DELETE' },
                     dataType: 'json',
@@ -246,7 +246,7 @@
         }).then((result) => {
             if (result.isConfirmed) {
                 $.ajax({
-                    url: APP.getUrl + '/sm/restore/' + id,
+                    url: APP.getUrl + '/sk/restore/' + id,
                     type: 'POST',
                     data: { _method: 'PATCH' },
                     dataType: 'json',

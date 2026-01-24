@@ -24,6 +24,10 @@
     <link href="{$theme}/assets/css/app.min.css" rel="stylesheet" type="text/css" id="app-style" />
     <!-- Icons css -->
     <link href="{$theme}/assets/css/icons.min.css" rel="stylesheet" type="text/css" />
+	{if $pagetype="news"}
+        <!-- Dropzone File Upload js -->
+    <link rel="stylesheet" href="{$theme}/assets/vendor/dropzone/dropzone.min.css" type="text/css" />
+	{/if}
     
 </head>
 
@@ -64,7 +68,7 @@
                 <ul class="side-nav">
 
                     <li class="side-nav-item" data-pagename="dashboard">
-                        <a href="dashboard" class="side-nav-link">
+                        <a href="{'dashboard'|surl}" class="side-nav-link">
                             <span class="menu-icon"><i class="ti ti-dashboard"></i></span>
                             <span class="menu-text"> Dashboard </span>
                         </a>
@@ -81,12 +85,12 @@
                         <div class="collapse" id="sidebarUsers1">
                             <ul class="sub-menu">
                                 <li class="side-nav-item">
-                                    <a href="users" class="side-nav-link">
+                                    <a href="{'users'|surl}" class="side-nav-link">
                                         <span class="menu-text">Lihat User</span>
                                     </a>
                                 </li>
                                 <li class="side-nav-item">
-                                    <a href="user_group" class="side-nav-link">
+                                    <a href="{'user_group'|surl}" class="side-nav-link">
                                         <span class="menu-text">User Group</span>
                                     </a>
                                 </li>
@@ -103,13 +107,18 @@
                         <div class="collapse" id="sidebarSurat1">
                             <ul class="sub-menu">
                                 <li class="side-nav-item">
-                                    <a href="sm" class="side-nav-link">
+                                    <a href="{'sm'|surl}" class="side-nav-link">
                                         <span class="menu-text">Surat Masuk</span>
                                     </a>
                                 </li>
                                 <li class="side-nav-item">
-                                    <a href="sk" class="side-nav-link">
+                                    <a href="{'sk'|surl}" class="side-nav-link">
                                         <span class="menu-text">Surat Keluar</span>
+                                    </a>
+                                </li>
+                                <li class="side-nav-item">
+                                    <a href="{'disposisi'|surl}" class="side-nav-link">
+                                        <span class="menu-text">Pengaturan Disposisi</span>
                                     </a>
                                 </li>
                             </ul>
@@ -117,20 +126,20 @@
                     </li>
 
                     <li class="side-nav-item " data-pagename="news,news_category">
-                        <a data-bs-toggle="collapse" href="#sidebarInvoice2" aria-expanded="false" aria-controls="sidebarInvoice2" class="side-nav-link">
+                        <a data-bs-toggle="collapse" href="#sidebarNews2" aria-expanded="false" aria-controls="sidebarNews2" class="side-nav-link">
                             <span class="menu-icon"><i class="ti ti-news"></i></span>
                             <span class="menu-text"> Berita</span>
                             <span class="menu-arrow"></span>
                         </a>
-                        <div class="collapse" id="sidebarInvoice2">
+                        <div class="collapse" id="sidebarNews2">
                             <ul class="sub-menu">
                                 <li class="side-nav-item">
-                                    <a href="?p=news" class="side-nav-link">
+                                    <a href="{'news'|surl}" class="side-nav-link">
                                         <span class="menu-text">Lihat Berita</span>
                                     </a>
                                 </li>
                                 <li class="side-nav-item">
-                                    <a href="?p=news_category" class="side-nav-link">
+                                    <a href="{'news_category'|surl}" class="side-nav-link">
                                         <span class="menu-text">Kategori Berita</span>
                                     </a>
                                 </li>
@@ -139,7 +148,7 @@
                     </li>
 
                     <li class="side-nav-item " data-pagename="contents">
-                        <a href="?p=contents" class="side-nav-link">
+                        <a href="contents" class="side-nav-link">
                             <span class="menu-icon"><i class="ti ti-folder-filled"></i></span>
                             <span class="menu-text"> Menu </span>
                         </a>

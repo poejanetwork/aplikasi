@@ -1,8 +1,5 @@
 Options -Indexes
 
-ErrorDocument 403 /?p=not_found
-ErrorDocument 404 /?p=not_found
-
 RewriteEngine On
 
 # =========================

@@ -12,7 +12,7 @@
         <input type="text" id="password" name="password" class="form-control" value="" required>
     </div>
     <div class="text-end">
-        <button type="button" class="btn btn-light" data-bs-dismiss="modal">
+        <button type="button" class="btn btn-light me-3" data-bs-dismiss="modal">
             Batal
         </button>
         <button type="submit" class="btn btn-primary">

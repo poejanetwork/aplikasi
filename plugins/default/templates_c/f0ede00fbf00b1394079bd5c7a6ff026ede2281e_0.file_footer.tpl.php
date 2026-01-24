@@ -1,18 +1,18 @@
 <?php
-/* Smarty version 5.5.1, created on 2026-01-16 13:09:39
+/* Smarty version 5.5.1, created on 2026-01-24 11:28:56
   from 'file:footer.tpl' */
 
 /* @var \Smarty\Template $_smarty_tpl */
 if ($_smarty_tpl->getCompiled()->isFresh($_smarty_tpl, array (
   'version' => '5.5.1',
-  'unifunc' => 'content_6969d623ec33b7_39150374',
+  'unifunc' => 'content_69744a88db2380_12861156',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
     'f0ede00fbf00b1394079bd5c7a6ff026ede2281e' => 
     array (
       0 => 'footer.tpl',
-      1 => 1768543767,
+      1 => 1769228935,
       2 => 'file',
     ),
   ),
@@ -20,7 +20,7 @@ if ($_smarty_tpl->getCompiled()->isFresh($_smarty_tpl, array (
   array (
   ),
 ))) {
-function content_6969d623ec33b7_39150374 (\Smarty\Template $_smarty_tpl) {
+function content_69744a88db2380_12861156 (\Smarty\Template $_smarty_tpl) {
 $_smarty_current_dir = 'C:\\xampp\\htdocs\\apli.kasi\\plugins\\default\\templates';
 ?>
             </div> <!-- container -->
@@ -357,6 +357,15 @@ $_smarty_current_dir = 'C:\\xampp\\htdocs\\apli.kasi\\plugins\\default\\template
  src="<?php echo $_smarty_tpl->getValue('theme');?>
 /assets/vendor/sweetalert2/sweetalert2.min.js"><?php echo '</script'; ?>
 >
+	<?php $_prefixVariable1 = "news";
+$_smarty_tpl->assign('pagetype', $_prefixVariable1, false, NULL);
+if ($_prefixVariable1) {?>
+    <!-- Dropzone File Upload js -->
+    <?php echo '<script'; ?>
+ src="<?php echo $_smarty_tpl->getValue('theme');?>
+/assets/vendor/dropzone/dropzone-min.js"><?php echo '</script'; ?>
+>
+	<?php }?>
 	<?php if ((true && ($_smarty_tpl->hasVariable('page_js') && null !== ($_smarty_tpl->getValue('page_js') ?? null)))) {?>
 	<?php echo '<script'; ?>
  src="<?php echo $_smarty_tpl->getValue('theme');?>

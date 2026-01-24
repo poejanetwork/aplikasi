@@ -322,6 +322,10 @@
     <script src="{$theme}/assets/js/app.js"></script>
 
     <script src="{$theme}/assets/vendor/sweetalert2/sweetalert2.min.js"></script>
+	{if $pagetype="news"}
+    <!-- Dropzone File Upload js -->
+    <script src="{$theme}/assets/vendor/dropzone/dropzone-min.js"></script>
+	{/if}
 	{if isset($page_js)}
 	<script src="{$theme}/assets/js/pages/{$page_js}"></script>
 	{/if}

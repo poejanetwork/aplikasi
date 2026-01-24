@@ -48,10 +48,16 @@ if (isset($_SESSION['loggedin']) && isset($_SESSION['adminapi'])) {
     header('Location: /', true, 303);exit();
 }
 
+define('ROOT_PATH', realpath(__DIR__));
+// define('ROOT_PATH', dirname(__FILE__));
+
 // main function
 $config_dir = $smarty->getConfigDir(0);
 require_once $config_dir.'env.php';
 require_once $config_dir.'helpers.php';
+$smarty->registerPlugin("modifier", "date_format_id", "date_format_id");
+$smarty->registerPlugin("modifier", "format_file_size", "format_file_size");
+$smarty->registerPlugin("modifier", "surl", "surl");
 date_default_timezone_set(env('SITE_TIMEZONE'));
 
 function getSuccessCode($successCode)
@@ -85,6 +91,10 @@ function getErrorCode($errorCode)
         28 => "Confirmation code is expired.",
         50 => "Password is wrong or cannot be empty.",
         51 => "Confirm Password is not same.",
+        1062 => 'Data sudah ada (duplikat)',
+        1452 => "Relasi data tidak valid",
+        1048 => "Ada kolom wajib yang kosong",
+        1406 => "Data terlalu panjang",
     );
     $error_msg = $error_array[$errorCode];
     return $error_msg;

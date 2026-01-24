@@ -1,15 +1,21 @@
 (function ($) {
     "use strict";
+    let currentPage = 1;
+    let currentSearch = '';
 
-    function loadUsers(page = 1) {
-        $.get(APP.getUrl + '/users/data', { page: page }, function (res) {
-
-            let rows = '';
+    function loadData(page = 1) {
+        currentPage = page;
+        $.get(APP.getUrl + '/users/data', {
+            page: page,
+            search: currentSearch
+        }, function (res) {
 
             if (!Array.isArray(res.data)) {
                 console.error('Invalid response', res);
                 return;
             }
+
+            let rows = '';
 
             res.data.forEach(function (row) {
             let rowClass = row.status == 0 ? 'table-danger text-muted' : '';
@@ -53,15 +59,52 @@
 
     function renderPagination(p) {
         let html = '';
+        let current = p.current_page;
+        let last = p.last_page;
+        let maxVisible = 5;
+        let start = Math.max(1, current - Math.floor(maxVisible / 2));
+        let end = start + maxVisible - 1;
 
-        for (let i = 1; i <= p.last_page; i++) {
-            html += '<button class="btn btn-sm ' +
-                (i === p.current_page ? 'btn-primary' : 'btn-outline-primary') +
-                '" onclick="loadUsers(' + i + ')">' + i + '</button> ';
+        if (end > last) {
+            end = last;
+            start = Math.max(1, end - maxVisible + 1);
         }
+        html += `
+            <li class="page-item ${current === 1 ? 'disabled' : ''}">
+                <a class="page-link" href="javascript:void(0);" onclick="loadData(${current - 1})">
+                    <span aria-hidden="true">«</span>
+                </a>
+            </li>
+        `;
+        for (let i = start; i <= end; i++) {
+            html += `
+                <li class="page-item ${i === current ? 'active' : ''}">
+                    <a class="page-link" href="javascript:void(0);" onclick="loadData(${i})">
+                        ${i}
+                    </a>
+                </li>
+            `;
+        }
+        html += `
+            <li class="page-item ${current === last ? 'disabled' : ''}">
+                <a class="page-link" href="javascript:void(0);" onclick="loadData(${current + 1})">
+                    <span aria-hidden="true">»</span>
+                </a>
+            </li>
+        `;
 
         $('#pagination').html(html);
     }
+    let searchTimer = null;
+
+    $('#searchInput').on('keyup', function () {
+        clearTimeout(searchTimer);
+
+        searchTimer = setTimeout(() => {
+            currentSearch = $(this).val().trim();
+            loadData(1); // reset ke page 1
+        }, 400);
+    });
 
     /* ===============================
        MODAL ADD & EDIT
@@ -87,7 +130,7 @@
                 console.log(res)
                 if (res.status) {
                     $('#dataModal').modal('hide');
-                    loadUsers();
+                    loadData();
                     Swal.fire('Berhasil', res.message, 'success');
                 } else {
                     Swal.fire('Gagal', res.message, 'error');
@@ -122,11 +165,13 @@
             url: APP.getUrl + '/users/update/' + id,
             type: 'POST',
             data: $(this).serialize() + '&_method=PUT',
+            contentType: false,
+            processData: false,
             dataType: 'json',
             success: function (res) {
                 if (res.status) {
                     $('#dataModal').modal('hide');
-                    loadUsers();
+                    loadData();
                     Swal.fire('Berhasil', res.message, 'success');
                 } else {
                     Swal.fire('Gagal', res.message, 'error');
@@ -165,7 +210,7 @@
                     success: function (res) {
                         if (res.status) {
                             Swal.fire('Berhasil', res.message, 'success');
-                            loadUsers();
+                            loadData();
                         } else {
                             Swal.fire('Gagal', res.message, 'error');
                         }
@@ -192,7 +237,7 @@
                     success: function (res) {
                         if (res.status) {
                             Swal.fire('Berhasil', res.message, 'success');
-                            loadUsers();
+                            loadData();
                         } else {
                             Swal.fire('Gagal', res.message, 'error');
                         }
@@ -205,11 +250,11 @@
 
     $(function () {
         if ($('#usersTable').length) {
-            loadUsers();
+            loadData();
         }
     });
 
     // expose jika dibutuhkan global
-    window.loadUsers = loadUsers;
+    window.loadData = loadData;
 
 })(jQuery);

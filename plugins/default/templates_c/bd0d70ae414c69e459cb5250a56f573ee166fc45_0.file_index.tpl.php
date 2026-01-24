@@ -1,18 +1,18 @@
 <?php
-/* Smarty version 5.5.1, created on 2026-01-18 19:49:59
-  from 'file:surat_masuk/index.tpl' */
+/* Smarty version 5.5.1, created on 2026-01-18 19:50:31
+  from 'file:disposisi/index.tpl' */
 
 /* @var \Smarty\Template $_smarty_tpl */
 if ($_smarty_tpl->getCompiled()->isFresh($_smarty_tpl, array (
   'version' => '5.5.1',
-  'unifunc' => 'content_696cd6f7906849_77786191',
+  'unifunc' => 'content_696cd717a563e2_73062210',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
-    '636bf9af94ea56870937aa31b44d335de942b543' => 
+    'bd0d70ae414c69e459cb5250a56f573ee166fc45' => 
     array (
-      0 => 'surat_masuk/index.tpl',
-      1 => 1768740113,
+      0 => 'disposisi/index.tpl',
+      1 => 1768740589,
       2 => 'file',
     ),
   ),
@@ -20,8 +20,8 @@ if ($_smarty_tpl->getCompiled()->isFresh($_smarty_tpl, array (
   array (
   ),
 ))) {
-function content_696cd6f7906849_77786191 (\Smarty\Template $_smarty_tpl) {
-$_smarty_current_dir = 'C:\\xampp\\htdocs\\apli.kasi\\plugins\\default\\templates\\surat_masuk';
+function content_696cd717a563e2_73062210 (\Smarty\Template $_smarty_tpl) {
+$_smarty_current_dir = 'C:\\xampp\\htdocs\\apli.kasi\\plugins\\default\\templates\\disposisi';
 ?><div class="row">
 	<div class="col-12">
 		<div class="page-title-head d-flex align-items-sm-center flex-sm-row flex-column">
@@ -39,12 +39,12 @@ $_smarty_current_dir = 'C:\\xampp\\htdocs\\apli.kasi\\plugins\\default\\template
             <div class="card-header border-bottom">
                 <div class="d-flex flex-wrap justify-content-between gap-2">
                     <div class="position-relative">
-                        <input type="text" id="searchInput" class="form-control ps-4" placeholder="Search Surat Masuk">
+                        <input type="text" id="searchInput" class="form-control ps-4" placeholder="Search Data">
                         <i class="ti ti-search position-absolute top-50 translate-middle-y ms-2"></i>
                     </div>
 
                     <div>
-                        <a href="javascript:void(0);" onclick="addData()" class="btn btn-primary"><i class="ti ti-plus me-1"></i>Add Surat</a>
+                        <a href="javascript:void(0);" onclick="addData()" class="btn btn-primary"><i class="ti ti-plus me-1"></i>Add Data</a>
                     </div>
                 </div>
             </div>
@@ -54,9 +54,7 @@ $_smarty_current_dir = 'C:\\xampp\\htdocs\\apli.kasi\\plugins\\default\\template
                     <thead>
                         <tr>
                             <th width="80">ID</th>
-                            <th>Nomor Surat<br/>Asal Surat</th>
-                            <th>Perihal</th>
-                            <th>Tanggal Surat</th>
+                            <th>Nama</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
@@ -65,7 +63,7 @@ $_smarty_current_dir = 'C:\\xampp\\htdocs\\apli.kasi\\plugins\\default\\template
             </div>
             <div class="card-footer">
                 <div class="d-flex justify-content-end">
-                    <ul id="pagination" class="pagination pagination-rounded pagination-boxed mb-0">
+                    <ul id="pagination" class="pagination justify-content-center mb-0">
                     </ul>
                 </div>
             </div>

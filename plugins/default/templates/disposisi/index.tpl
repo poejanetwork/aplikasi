@@ -14,12 +14,12 @@
             <div class="card-header border-bottom">
                 <div class="d-flex flex-wrap justify-content-between gap-2">
                     <div class="position-relative">
-                        <input type="text" id="searchInput" class="form-control ps-4" placeholder="Search Surat Masuk">
+                        <input type="text" id="searchInput" class="form-control ps-4" placeholder="Search Data">
                         <i class="ti ti-search position-absolute top-50 translate-middle-y ms-2"></i>
                     </div>
 
                     <div>
-                        <a href="javascript:void(0);" onclick="addData()" class="btn btn-primary"><i class="ti ti-plus me-1"></i>Add Surat</a>
+                        <a href="javascript:void(0);" onclick="addData()" class="btn btn-primary"><i class="ti ti-plus me-1"></i>Add Data</a>
                     </div>
                 </div>
             </div>
@@ -29,9 +29,7 @@
                     <thead>
                         <tr>
                             <th width="80">ID</th>
-                            <th>Nomor Surat<br/>Asal Surat</th>
-                            <th>Perihal</th>
-                            <th>Tanggal Surat</th>
+                            <th>Nama</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
@@ -40,7 +38,7 @@
             </div>
             <div class="card-footer">
                 <div class="d-flex justify-content-end">
-                    <ul id="pagination" class="pagination pagination-rounded pagination-boxed mb-0">
+                    <ul id="pagination" class="pagination justify-content-center mb-0">
                     </ul>
                 </div>
             </div>

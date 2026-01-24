@@ -1,18 +1,18 @@
 <?php
-/* Smarty version 5.5.1, created on 2025-11-09 07:50:07
+/* Smarty version 5.5.1, created on 2026-01-24 08:03:55
   from 'file:header.tpl' */
 
 /* @var \Smarty\Template $_smarty_tpl */
 if ($_smarty_tpl->getCompiled()->isFresh($_smarty_tpl, array (
   'version' => '5.5.1',
-  'unifunc' => 'content_690fe53f1b5842_89575622',
+  'unifunc' => 'content_69741a7b80f0e0_78513356',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
     '60c034b32f3f18d3f0ea5f1b6bd62fa1f2aee732' => 
     array (
       0 => 'header.tpl',
-      1 => 1762649402,
+      1 => 1769216633,
       2 => 'file',
     ),
   ),
@@ -20,7 +20,7 @@ if ($_smarty_tpl->getCompiled()->isFresh($_smarty_tpl, array (
   array (
   ),
 ))) {
-function content_690fe53f1b5842_89575622 (\Smarty\Template $_smarty_tpl) {
+function content_69741a7b80f0e0_78513356 (\Smarty\Template $_smarty_tpl) {
 $_smarty_current_dir = 'C:\\xampp\\htdocs\\apli.kasi\\theme\\default\\templates';
 ?><!DOCTYPE html>
 <html lang="en">
@@ -227,7 +227,7 @@ $_smarty_current_dir = 'C:\\xampp\\htdocs\\apli.kasi\\theme\\default\\templates'
         </li>
 				  
 				  <li class="nav-item"> 
-				      <a class="nav-link dropdown-toggle" href="contact.html" title="Visit home page">
+				      <a class="nav-link dropdown-toggle" href="login" title="Visit home page">
 					  Contact Us
 					  </a>
 				  </li>

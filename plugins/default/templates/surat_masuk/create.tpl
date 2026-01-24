@@ -1,4 +1,4 @@
-<form id="formAddData">
+<form id="formAddData" enctype="multipart/form-data">
     
     <div class="mb-3">
         <label for="asal_surat" class="form-label">Asal Surat</label>
@@ -27,28 +27,39 @@
 
     <div class="mb-3">
         <label class="form-label fw-bold">Lembar Disposisi</label>
-        <div class="row g-2">
-            <div class="col-sm-6">
-                <div class="form-check form-checkbox-secondary mb-2">
-                    <input class="form-check-input" type="checkbox" name="disposisi[tindak_lanjuti]" value="1" id="tindak_lanjuti">
-                    <label class="form-check-label" for="tindak_lanjuti">Tindak lanjuti</label>
-                </div>
-                <div class="form-check form-checkbox-secondary mb-2">
-                    <input class="form-check-input" type="checkbox" name="disposisi[arsipkan]" value="1" id="arsipkan">
-                    <label class="form-check-label" for="arsipkan">Arsipkan</label>
-                </div>
+
+        <div class="row">
+            <div class="col-6 col-lg-6 col-md-6">
+                {foreach $disposisiLeft as $d}
+                    <div class="form-check form-checkbox-secondary my-1">
+                        <input class="form-check-input"
+                            type="checkbox"
+                            name="disposisi[]"
+                            value="{$d.id}"
+                            id="disposisi{$d.id}">
+                        <label for="disposisi{$d.id}" class="form-check-label">
+                            {$d.nama}
+                        </label>
+                    </div>
+                {/foreach}
             </div>
-            <div class="col-sm-6">
-                <div class="form-check form-checkbox-secondary mb-2">
-                    <input class="form-check-input" type="checkbox" name="disposisi[koordinasikan]" value="1" id="koordinasikan">
-                    <label class="form-check-label" for="koordinasikan">Koordinasikan</label>
-                </div>
-                <div class="form-check form-checkbox-secondary mb-2">
-                    <input class="form-check-input" type="checkbox" name="disposisi[laporkan]" value="1" id="laporkan">
-                    <label class="form-check-label" for="laporkan">Laporkan</label>
-                </div>
+
+            <div class="col-6 col-lg-6 col-md-6">
+                {foreach $disposisiRight as $d}
+                    <div class="form-check form-checkbox-secondary my-1">
+                        <input class="form-check-input"
+                            type="checkbox"
+                            name="disposisi[]"
+                            value="{$d.id}"
+                            id="disposisi{$d.id}">
+                        <label for="disposisi{$d.id}" class="form-check-label">
+                            {$d.nama}
+                        </label>
+                    </div>
+                {/foreach}
             </div>
         </div>
+
     </div>
 
     <div class="mb-3">
@@ -58,11 +69,15 @@
 
     <div class="mb-3">
         <label class="form-label">Upload File</label>
-        <input class="form-control" type="file" id="dataFile">
+        <input class="form-control" type="file"
+            name="file_surat"
+            accept=".pdf,.doc,.docx,image/*"
+            capture="environment"
+            required>
     </div>
     
     <div class="text-end">
-        <button type="button" class="btn btn-light" data-bs-dismiss="modal">
+        <button type="button" class="btn btn-light me-3" data-bs-dismiss="modal">
             Batal
         </button>
         <button type="submit" class="btn btn-primary">
