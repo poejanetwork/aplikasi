@@ -2,7 +2,7 @@
 	<div class="col-12">
 		<div class="page-title-head d-flex align-items-sm-center flex-sm-row flex-column">
 			<div class="flex-grow-1">
-				<h4 class="fs-18 text-uppercase fw-bold m-0">{$pagename}</h4>
+				<h4 class="fs-18 text-uppercase fw-bold m-0">{$pagetitle}</h4>
 			</div>
 		</div><!-- end card header -->
 	</div>

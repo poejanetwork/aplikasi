@@ -1,18 +1,18 @@
 <?php
-/* Smarty version 5.5.1, created on 2026-01-24 11:26:12
+/* Smarty version 5.5.1, created on 2026-01-25 19:24:55
   from 'file:header.tpl' */
 
 /* @var \Smarty\Template $_smarty_tpl */
 if ($_smarty_tpl->getCompiled()->isFresh($_smarty_tpl, array (
   'version' => '5.5.1',
-  'unifunc' => 'content_697449e43c1f15_75493907',
+  'unifunc' => 'content_69760b973366b3_54328957',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
     '5ca003dc04e4831eba66e8ed93dfafa0e2e87c1b' => 
     array (
       0 => 'header.tpl',
-      1 => 1769228542,
+      1 => 1769343893,
       2 => 'file',
     ),
   ),
@@ -20,7 +20,7 @@ if ($_smarty_tpl->getCompiled()->isFresh($_smarty_tpl, array (
   array (
   ),
 ))) {
-function content_697449e43c1f15_75493907 (\Smarty\Template $_smarty_tpl) {
+function content_69760b973366b3_54328957 (\Smarty\Template $_smarty_tpl) {
 $_smarty_current_dir = 'C:\\xampp\\htdocs\\apli.kasi\\plugins\\default\\templates';
 ?><!DOCTYPE html>
 <html lang="en">
@@ -147,7 +147,7 @@ echo $_smarty_tpl->getValue('ADMIN_URL');?>
                         </div>
                     </li>
 
-                    <li class="side-nav-item " data-pagename="users,user_group">
+                    <li class="side-nav-item " data-pagename="sm,sk,disposisi">
                         <a data-bs-toggle="collapse" href="#sidebarSurat1" aria-expanded="false" aria-controls="sidebarSurat1" class="side-nav-link">
                             <span class="menu-icon"><i class="ti ti-mail-opened-filled"></i></span>
                             <span class="menu-text"> Surat</span>
@@ -195,6 +195,36 @@ echo $_smarty_tpl->getValue('ADMIN_URL');?>
                                     <a href="<?php echo $_smarty_tpl->getSmarty()->getModifierCallback('surl')('news_category');?>
 " class="side-nav-link">
                                         <span class="menu-text">Kategori Berita</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+
+                    <li class="side-nav-item " data-pagename="doktrin,doktrin_categories">
+                        <a data-bs-toggle="collapse" href="#sidebarData3" aria-expanded="false" aria-controls="sidebarData3" class="side-nav-link">
+                            <span class="menu-icon"><i class="ti ti-api-app"></i></span>
+                            <span class="menu-text"> Data</span>
+                            <span class="menu-arrow"></span>
+                        </a>
+                        <div class="collapse" id="sidebarData3">
+                            <ul class="sub-menu">
+                                <li class="side-nav-item">
+                                    <a href="<?php echo $_smarty_tpl->getSmarty()->getModifierCallback('surl')('doktrin');?>
+" class="side-nav-link">
+                                        <span class="menu-text">Data Doktrin</span>
+                                    </a>
+                                </li>
+                                <li class="side-nav-item">
+                                    <a href="<?php echo $_smarty_tpl->getSmarty()->getModifierCallback('surl')('doktrin_categories');?>
+" class="side-nav-link">
+                                        <span class="menu-text">Pengaturan Kategori Doktrin</span>
+                                    </a>
+                                </li>
+                                <li class="side-nav-item">
+                                    <a href="<?php echo $_smarty_tpl->getSmarty()->getModifierCallback('surl')('data');?>
+" class="side-nav-link">
+                                        <span class="menu-text">Data</span>
                                     </a>
                                 </li>
                             </ul>

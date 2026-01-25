@@ -125,21 +125,17 @@
             data: form.serialize(),
             dataType: 'json',
             success: function (res) {
-                if (res.status) {
+                if (res.status === true) {
                     $('#dataModal').modal('hide');
                     loadData();
-                    Swal.fire('Berhasil', res.message, 'success');
+                    swalSuccess(res.message)
                 } else {
-                    Swal.fire('Gagal', res.message, 'error');
+                    swalError(res.message, 'Tutup')
                 }
             },
             error: function (xhr) {
+                swalError('Please read console log', 'Tutup');
                 console.error(xhr.responseText);
-                Swal.fire(
-                    'Server error',
-                    'Please read console log',
-                    'error'
-                );
             }
         });
     });
@@ -164,21 +160,17 @@
             data: $(this).serialize() + '&_method=PUT',
             dataType: 'json',
             success: function (res) {
-                if (res.status) {
+                if (res.status === true) {
                     $('#dataModal').modal('hide');
                     loadData();
-                    Swal.fire('Berhasil', res.message, 'success');
+                    swalSuccess(res.message)
                 } else {
-                    Swal.fire('Gagal', res.message, 'error');
+                    swalError(res.message, 'Tutup')
                 }
             },
             error: function (xhr) {
+                swalError('Please read console log', 'Tutup');
                 console.error(xhr.responseText);
-                Swal.fire(
-                    'Server error',
-                    'Please read console log',
-                    'error'
-                );
             }
         });
     });
@@ -187,26 +179,19 @@
        DELETE DATA
     =============================== */
     window.deleteData = function (id) {
-        Swal.fire({
-            title: 'Hapus data?',
-            text: 'Data tidak bisa dikembalikan',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Ya, hapus',
-            cancelButtonText: 'Batal'
-        }).then((result) => {
+        swalDelete('Hapus data?','Data tidak bisa dikembalikan').then((result) => {
             if (result.isConfirmed) {
                 $.ajax({
-                    url: APP.getUrl + '/disposisi/delete/' + id,
+                    url: APP.getUrl + '/news_category/delete/' + id,
                     type: 'POST',
                     data: { _method: 'DELETE' },
                     dataType: 'json',
                     success: function (res) {
                         if (res.status) {
-                            Swal.fire('Berhasil', res.message, 'success');
+                            swalSuccess(res.message)
                             loadData();
                         } else {
-                            Swal.fire('Gagal', res.message, 'error');
+                            swalError(res.message, 'Tutup')
                         }
                     }
                 });
@@ -214,26 +199,19 @@
         });
     };
     window.restoreData = function (id) {
-        Swal.fire({
-            title: 'Restore data?',
-            text: 'Data akan dikembalikan',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Ya, restore',
-            cancelButtonText: 'Batal'
-        }).then((result) => {
+        swalDelete('Restore data?','Data akan dikembalikan').then((result) => {
             if (result.isConfirmed) {
                 $.ajax({
-                    url: APP.getUrl + '/disposisi/restore/' + id,
+                    url: APP.getUrl + '/news_category/restore/' + id,
                     type: 'POST',
                     data: { _method: 'PATCH' },
                     dataType: 'json',
                     success: function (res) {
                         if (res.status) {
-                            Swal.fire('Berhasil', res.message, 'success');
+                            swalSuccess(res.message)
                             loadData();
                         } else {
-                            Swal.fire('Gagal', res.message, 'error');
+                            swalError(res.message, 'Tutup')
                         }
                     }
                 });

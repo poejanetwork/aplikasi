@@ -1,18 +1,18 @@
 <?php
-/* Smarty version 5.5.1, created on 2026-01-24 11:28:56
+/* Smarty version 5.5.1, created on 2026-01-24 13:26:50
   from 'file:footer.tpl' */
 
 /* @var \Smarty\Template $_smarty_tpl */
 if ($_smarty_tpl->getCompiled()->isFresh($_smarty_tpl, array (
   'version' => '5.5.1',
-  'unifunc' => 'content_69744a88db2380_12861156',
+  'unifunc' => 'content_6974662a796e74_43211186',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
     'f0ede00fbf00b1394079bd5c7a6ff026ede2281e' => 
     array (
       0 => 'footer.tpl',
-      1 => 1769228935,
+      1 => 1769235958,
       2 => 'file',
     ),
   ),
@@ -20,7 +20,7 @@ if ($_smarty_tpl->getCompiled()->isFresh($_smarty_tpl, array (
   array (
   ),
 ))) {
-function content_69744a88db2380_12861156 (\Smarty\Template $_smarty_tpl) {
+function content_6974662a796e74_43211186 (\Smarty\Template $_smarty_tpl) {
 $_smarty_current_dir = 'C:\\xampp\\htdocs\\apli.kasi\\plugins\\default\\templates';
 ?>
             </div> <!-- container -->
@@ -357,7 +357,7 @@ $_smarty_current_dir = 'C:\\xampp\\htdocs\\apli.kasi\\plugins\\default\\template
  src="<?php echo $_smarty_tpl->getValue('theme');?>
 /assets/vendor/sweetalert2/sweetalert2.min.js"><?php echo '</script'; ?>
 >
-	<?php $_prefixVariable1 = "news";
+	<?php $_prefixVariable1 = "can_upload";
 $_smarty_tpl->assign('pagetype', $_prefixVariable1, false, NULL);
 if ($_prefixVariable1) {?>
     <!-- Dropzone File Upload js -->

@@ -98,7 +98,7 @@
                         </div>
                     </li>
 
-                    <li class="side-nav-item " data-pagename="users,user_group">
+                    <li class="side-nav-item " data-pagename="sm,sk,disposisi">
                         <a data-bs-toggle="collapse" href="#sidebarSurat1" aria-expanded="false" aria-controls="sidebarSurat1" class="side-nav-link">
                             <span class="menu-icon"><i class="ti ti-mail-opened-filled"></i></span>
                             <span class="menu-text"> Surat</span>
@@ -141,6 +141,33 @@
                                 <li class="side-nav-item">
                                     <a href="{'news_category'|surl}" class="side-nav-link">
                                         <span class="menu-text">Kategori Berita</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+
+                    <li class="side-nav-item " data-pagename="doktrin,doktrin_categories">
+                        <a data-bs-toggle="collapse" href="#sidebarData3" aria-expanded="false" aria-controls="sidebarData3" class="side-nav-link">
+                            <span class="menu-icon"><i class="ti ti-api-app"></i></span>
+                            <span class="menu-text"> Data</span>
+                            <span class="menu-arrow"></span>
+                        </a>
+                        <div class="collapse" id="sidebarData3">
+                            <ul class="sub-menu">
+                                <li class="side-nav-item">
+                                    <a href="{'doktrin'|surl}" class="side-nav-link">
+                                        <span class="menu-text">Data Doktrin</span>
+                                    </a>
+                                </li>
+                                <li class="side-nav-item">
+                                    <a href="{'doktrin_categories'|surl}" class="side-nav-link">
+                                        <span class="menu-text">Pengaturan Kategori Doktrin</span>
+                                    </a>
+                                </li>
+                                <li class="side-nav-item">
+                                    <a href="{'data'|surl}" class="side-nav-link">
+                                        <span class="menu-text">Data</span>
                                     </a>
                                 </li>
                             </ul>

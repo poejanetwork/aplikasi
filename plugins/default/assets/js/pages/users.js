@@ -16,12 +16,13 @@
             }
 
             let rows = '';
+            let startNumber = (res.pagination.current_page - 1) * res.pagination.per_page;
 
-            res.data.forEach(function (row) {
+            res.data.forEach(function (row, index) {
             let rowClass = row.status == 0 ? 'table-danger text-muted' : '';
                 rows += `
                     <tr class="${rowClass}">
-                        <td>${row.id}</td>
+                        <td>${startNumber + index + 1}</td>
                         <td>${row.fullname}</td>
                         <td>${row.email}</td>
                         <td>satuan</td>
@@ -127,22 +128,17 @@
             data: form.serialize(),
             dataType: 'json',
             success: function (res) {
-                console.log(res)
-                if (res.status) {
+                if (res.status === true) {
                     $('#dataModal').modal('hide');
                     loadData();
-                    Swal.fire('Berhasil', res.message, 'success');
+                    swalSuccess(res.message)
                 } else {
-                    Swal.fire('Gagal', res.message, 'error');
+                    swalError(res.message, 'Tutup')
                 }
             },
             error: function (xhr) {
+                swalError('Please read console log', 'Tutup');
                 console.error(xhr.responseText);
-                Swal.fire(
-                    'Server error',
-                    'Please read console log',
-                    'error'
-                );
             }
         });
     });
@@ -169,21 +165,17 @@
             processData: false,
             dataType: 'json',
             success: function (res) {
-                if (res.status) {
+                if (res.status === true) {
                     $('#dataModal').modal('hide');
                     loadData();
-                    Swal.fire('Berhasil', res.message, 'success');
+                    swalSuccess(res.message)
                 } else {
-                    Swal.fire('Gagal', res.message, 'error');
+                    swalError(res.message, 'Tutup')
                 }
             },
             error: function (xhr) {
+                swalError('Please read console log', 'Tutup');
                 console.error(xhr.responseText);
-                Swal.fire(
-                    'Server error',
-                    'Please read console log',
-                    'error'
-                );
             }
         });
     });
@@ -192,15 +184,8 @@
     /* ===============================
        DELETE USER
     =============================== */
-    window.deleteUser = function (id) {
-        Swal.fire({
-            title: 'Hapus data?',
-            text: 'Data tidak bisa dikembalikan',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Ya, hapus',
-            cancelButtonText: 'Batal'
-        }).then((result) => {
+    window.deleteData = function (id) {
+        swalDelete('Hapus data?','Data tidak bisa dikembalikan').then((result) => {
             if (result.isConfirmed) {
                 $.ajax({
                     url: APP.getUrl + '/users/delete/' + id,
@@ -209,25 +194,18 @@
                     dataType: 'json',
                     success: function (res) {
                         if (res.status) {
-                            Swal.fire('Berhasil', res.message, 'success');
+                            swalSuccess(res.message)
                             loadData();
                         } else {
-                            Swal.fire('Gagal', res.message, 'error');
+                            swalError(res.message, 'Tutup')
                         }
                     }
                 });
             }
         });
     };
-    window.restoreUser = function (id) {
-        Swal.fire({
-            title: 'Restore data?',
-            text: 'Data akan dikembalikan',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Ya, restore',
-            cancelButtonText: 'Batal'
-        }).then((result) => {
+    window.restoreData = function (id) {
+        swalDelete('Restore data?','Data akan dikembalikan').then((result) => {
             if (result.isConfirmed) {
                 $.ajax({
                     url: APP.getUrl + '/users/restore/' + id,
@@ -236,10 +214,10 @@
                     dataType: 'json',
                     success: function (res) {
                         if (res.status) {
-                            Swal.fire('Berhasil', res.message, 'success');
+                            swalSuccess(res.message)
                             loadData();
                         } else {
-                            Swal.fire('Gagal', res.message, 'error');
+                            swalError(res.message, 'Tutup')
                         }
                     }
                 });

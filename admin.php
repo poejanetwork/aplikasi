@@ -116,5 +116,12 @@ function cFormat($number, ?string $decimal = null)
 // ==================================
 $smarty->assign('BASE_URL', env('BASE_URL'));
 $smarty->assign('ADMIN_URL', env('ADMIN_URL'));
+$uploadConfig = [
+    'place' => (int) env('UPLOAD_PLACE'),
+    'key'   => env('UPLOAD_PLACE_KEY'),
+    'uploadUrlImg' => env('BASE_URL').''.env('ADMIN_URL') . '/upload/img',
+    'uploadUrlFile' => env('BASE_URL').''.env('ADMIN_URL') . '/upload/file'
+];
+$smarty->assign('uploadConfig', $uploadConfig);
 require_once $config_dir.'routes.php';
 ?>

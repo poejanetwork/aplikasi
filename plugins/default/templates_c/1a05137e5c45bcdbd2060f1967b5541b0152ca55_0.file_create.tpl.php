@@ -1,18 +1,18 @@
 <?php
-/* Smarty version 5.5.1, created on 2026-01-24 11:28:16
+/* Smarty version 5.5.1, created on 2026-01-25 21:54:31
   from 'file:news/create.tpl' */
 
 /* @var \Smarty\Template $_smarty_tpl */
 if ($_smarty_tpl->getCompiled()->isFresh($_smarty_tpl, array (
   'version' => '5.5.1',
-  'unifunc' => 'content_69744a60c39770_15104222',
+  'unifunc' => 'content_69762ea7d99792_83141061',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
     '1a05137e5c45bcdbd2060f1967b5541b0152ca55' => 
     array (
       0 => 'news/create.tpl',
-      1 => 1769228895,
+      1 => 1769352765,
       2 => 'file',
     ),
   ),
@@ -20,7 +20,7 @@ if ($_smarty_tpl->getCompiled()->isFresh($_smarty_tpl, array (
   array (
   ),
 ))) {
-function content_69744a60c39770_15104222 (\Smarty\Template $_smarty_tpl) {
+function content_69762ea7d99792_83141061 (\Smarty\Template $_smarty_tpl) {
 $_smarty_current_dir = 'C:\\xampp\\htdocs\\apli.kasi\\plugins\\default\\templates\\news';
 ?><link rel="stylesheet" href="/plugins/sceditor/minified/themes/default.min.css" />
 <?php echo '<script'; ?>
@@ -33,9 +33,11 @@ $_smarty_current_dir = 'C:\\xampp\\htdocs\\apli.kasi\\plugins\\default\\template
 	<div class="col-12">
 		<div class="page-title-head d-flex align-items-sm-center flex-sm-row flex-column">
 			<div class="flex-grow-1">
-				<h4 class="fs-18 text-uppercase fw-bold m-0"><?php echo $_smarty_tpl->getValue('pagename');?>
+				<h4 class="fs-18 text-uppercase fw-bold m-0"><?php echo $_smarty_tpl->getValue('pagetitle');?>
 </h4>
 			</div>
+            <div class="text-end"><a href="<?php echo $_smarty_tpl->getSmarty()->getModifierCallback('surl')('news');?>
+" class="btn btn-sm btn-outline-dark"><i class="ti ti-arrow-left align-middle me-1"></i> kembali</a></div>
 		</div><!-- end card header -->
 	</div>
 	<!--end col-->
@@ -44,7 +46,7 @@ $_smarty_current_dir = 'C:\\xampp\\htdocs\\apli.kasi\\plugins\\default\\template
     <div class="col-12">
         <div class="card">
             <div class="card-header border-bottom border-dashed d-flex align-items-center">
-                <h4 class="header-title"><?php echo $_smarty_tpl->getValue('pagename');?>
+                <h4 class="header-title"><?php echo $_smarty_tpl->getValue('pagetitle');?>
 </h4>
             </div>
 
@@ -60,13 +62,13 @@ $_smarty_current_dir = 'C:\\xampp\\htdocs\\apli.kasi\\plugins\\default\\template
                         <label for="category_id" class="form-label fw-bold">Kategori Berita</label>
                         <select class="form-select" id="category_id" name="category_id">
                             <?php
-$_from = $_smarty_tpl->getSmarty()->getRuntime('Foreach')->init($_smarty_tpl, $_smarty_tpl->getValue('category'), 'd');
+$_from = $_smarty_tpl->getSmarty()->getRuntime('Foreach')->init($_smarty_tpl, $_smarty_tpl->getValue('categories'), 'item');
 $foreach0DoElse = true;
-foreach ($_from ?? [] as $_smarty_tpl->getVariable('d')->value) {
+foreach ($_from ?? [] as $_smarty_tpl->getVariable('item')->value) {
 $foreach0DoElse = false;
 ?>
-                            <option value="<?php echo $_smarty_tpl->getValue('d')['id'];?>
-"><?php echo $_smarty_tpl->getValue('d')['nama'];?>
+                            <option value="<?php echo $_smarty_tpl->getValue('item')['id'];?>
+"><?php echo $_smarty_tpl->getValue('item')['name'];?>
 </option>
                             <?php
 }
@@ -81,16 +83,8 @@ $_smarty_tpl->getSmarty()->getRuntime('Foreach')->restore($_smarty_tpl, 1);?>
 
                     <div class="mb-3">
                         <label for="created_at" class="form-label">Tanggal Berita</label>
-                        <input type="date" id="created_at" name="created_at" class="form-control" value="">
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">Upload File</label>
-                        <input class="form-control" type="file"
-                            name="file_surat"
-                            accept=".pdf,.doc,.docx,image/*"
-                            capture="environment"
-                            required>
+                        <input type="date" id="created_at" name="created_at" class="form-control" value="<?php echo $_smarty_tpl->getSmarty()->getModifierCallback('date_format')(time(),"%Y-%m-%d");?>
+">
                     </div>
                     
                     <div class="text-end">
@@ -113,7 +107,6 @@ $_smarty_tpl->getSmarty()->getRuntime('Foreach')->restore($_smarty_tpl, 1);?>
             <div class="card-body">
                 <form action="/" method="post" class="dropzone dz-clickable" id="myAwesomeDropzone" data-plugin="dropzone" data-imgtype="default" data-previews-container="#file-previews" data-upload-preview-template="#uploadPreviewTemplate">
                     
-
                     <div class="dz-message needsclick">
                         <i class="ti ti-cloud-upload h1 text-muted"></i>
                         <h3>Jatuhkan files disini atau klik untuk upload.</h3>
@@ -151,5 +144,34 @@ $_smarty_tpl->getSmarty()->getRuntime('Foreach')->restore($_smarty_tpl, 1);?>
         </div>
         
     </div>
-</div><?php }
+</div>
+<?php echo '<script'; ?>
+>
+window.APP = {
+    UPLOAD_CONFIG: {
+        place: '<?php echo $_smarty_tpl->getValue('uploadConfig')['place'];?>
+',
+        key: '<?php echo $_smarty_tpl->getValue('uploadConfig')['key'];?>
+',
+        uploadUrl: '<?php echo $_smarty_tpl->getValue('uploadConfig')['uploadUrlImg'];?>
+',
+        uploadFolder: 'images',
+        uploadType: 'image',
+        jenis: ''
+    },
+    getUrl: '<?php echo $_smarty_tpl->getValue('BASE_URL');
+echo $_smarty_tpl->getValue('ADMIN_URL');?>
+'
+};
+<?php echo '</script'; ?>
+>
+<?php echo '<script'; ?>
+ type="module">
+import { initDropzone } from '/plugins/default/assets/js/dropzone-upload.js';
+
+document.addEventListener('DOMContentLoaded', () => {
+    initDropzone('#myAwesomeDropzone');
+});
+<?php echo '</script'; ?>
+><?php }
 }

@@ -34,28 +34,43 @@
     }
 }();
 
-function swalAlert($result, $msg){
-    if($result=="error"){
-        Swal.fire({
-            text: $msg,
-            icon: "error",
-            buttonsStyling: !1,
-            confirmButtonText: "Ok, got it!",
-            customClass: {
-                confirmButton: "btn btn-danger"
-            }
-        })
-    }else{
-        Swal.fire({
-            position: "top-end",
-            icon: "success",
-            text: $msg,
-            showConfirmButton: !1,
-            timer: 2000,
-            customClass: {
-                confirmButton: "btn btn-primary"
-            },
-            buttonsStyling: !1
-        })
-    }
+function swalSuccess(msg) {
+    return Swal.fire({
+        position: "top-end",
+        icon: "success",
+        text: msg,
+        showConfirmButton: false,
+        timer: 2000
+    });
 }
+
+function swalError(msg, btn = 'OK') {
+    return Swal.fire({
+        icon: "error",
+        text: msg,
+        confirmButtonText: btn,
+        buttonsStyling: false,
+        customClass: { confirmButton: "btn btn-danger" }
+    });
+}
+function swalDelete(title, msg) {
+    return Swal.fire({
+            title: title,
+            text: msg,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Ya, hapus',
+            cancelButtonText: 'Batal'
+        });
+}
+function swalRestore(title, msg) {
+    return Swal.fire({
+            title: title,
+            text: msg,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Ya, restore',
+            cancelButtonText: 'Batal'
+        });
+}
+

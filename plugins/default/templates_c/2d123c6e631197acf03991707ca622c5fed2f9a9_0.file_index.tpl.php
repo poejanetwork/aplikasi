@@ -1,18 +1,18 @@
 <?php
-/* Smarty version 5.5.1, created on 2026-01-24 10:40:01
+/* Smarty version 5.5.1, created on 2026-01-25 17:27:29
   from 'file:news/index.tpl' */
 
 /* @var \Smarty\Template $_smarty_tpl */
 if ($_smarty_tpl->getCompiled()->isFresh($_smarty_tpl, array (
   'version' => '5.5.1',
-  'unifunc' => 'content_69743f1140d393_06898615',
+  'unifunc' => 'content_6975f0113e7348_42900482',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
     '2d123c6e631197acf03991707ca622c5fed2f9a9' => 
     array (
       0 => 'news/index.tpl',
-      1 => 1769225994,
+      1 => 1769336796,
       2 => 'file',
     ),
   ),
@@ -20,13 +20,13 @@ if ($_smarty_tpl->getCompiled()->isFresh($_smarty_tpl, array (
   array (
   ),
 ))) {
-function content_69743f1140d393_06898615 (\Smarty\Template $_smarty_tpl) {
+function content_6975f0113e7348_42900482 (\Smarty\Template $_smarty_tpl) {
 $_smarty_current_dir = 'C:\\xampp\\htdocs\\apli.kasi\\plugins\\default\\templates\\news';
 ?><div class="row">
 	<div class="col-12">
 		<div class="page-title-head d-flex align-items-sm-center flex-sm-row flex-column">
 			<div class="flex-grow-1">
-				<h4 class="fs-18 text-uppercase fw-bold m-0"><?php echo $_smarty_tpl->getValue('pagename');?>
+				<h4 class="fs-18 text-uppercase fw-bold m-0"><?php echo $_smarty_tpl->getValue('pagetitle');?>
 </h4>
 			</div>
 		</div><!-- end card header -->

@@ -935,7 +935,7 @@ if (isset($_GET['ddoscode']) && is_numeric($_GET['ddoscode'])) {
                 [
                     'type' => 'LEFT',
                     'table' => 'news_category nc',
-                    'on' => 'n.category = nc.id'
+                    'on' => 'n.category_id = nc.id'
                 ]
             ], $empty, 8, ['n.id' => 'DESC']);
             $allNews = [];

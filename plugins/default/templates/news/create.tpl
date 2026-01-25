@@ -5,8 +5,9 @@
 	<div class="col-12">
 		<div class="page-title-head d-flex align-items-sm-center flex-sm-row flex-column">
 			<div class="flex-grow-1">
-				<h4 class="fs-18 text-uppercase fw-bold m-0">{$pagename}</h4>
+				<h4 class="fs-18 text-uppercase fw-bold m-0">{$pagetitle}</h4>
 			</div>
+            <div class="text-end"><a href="{'news'|surl}" class="btn btn-sm btn-outline-dark"><i class="ti ti-arrow-left align-middle me-1"></i> kembali</a></div>
 		</div><!-- end card header -->
 	</div>
 	<!--end col-->
@@ -15,7 +16,7 @@
     <div class="col-12">
         <div class="card">
             <div class="card-header border-bottom border-dashed d-flex align-items-center">
-                <h4 class="header-title">{$pagename}</h4>
+                <h4 class="header-title">{$pagetitle}</h4>
             </div>
 
             <div class="card-body">
@@ -29,8 +30,8 @@
                     <div class="mb-3">
                         <label for="category_id" class="form-label fw-bold">Kategori Berita</label>
                         <select class="form-select" id="category_id" name="category_id">
-                            {foreach $category as $d}
-                            <option value="{$d.id}">{$d.nama}</option>
+                            {foreach $categories as $item}
+                            <option value="{$item.id}">{$item.name}</option>
                             {/foreach}
                         </select>
                     </div>
@@ -42,16 +43,7 @@
 
                     <div class="mb-3">
                         <label for="created_at" class="form-label">Tanggal Berita</label>
-                        <input type="date" id="created_at" name="created_at" class="form-control" value="">
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">Upload File</label>
-                        <input class="form-control" type="file"
-                            name="file_surat"
-                            accept=".pdf,.doc,.docx,image/*"
-                            capture="environment"
-                            required>
+                        <input type="date" id="created_at" name="created_at" class="form-control" value="{$smarty.now|date_format:"%Y-%m-%d"}">
                     </div>
                     
                     <div class="text-end">
@@ -74,7 +66,6 @@
             <div class="card-body">
                 <form action="/" method="post" class="dropzone dz-clickable" id="myAwesomeDropzone" data-plugin="dropzone" data-imgtype="default" data-previews-container="#file-previews" data-upload-preview-template="#uploadPreviewTemplate">
                     
-
                     <div class="dz-message needsclick">
                         <i class="ti ti-cloud-upload h1 text-muted"></i>
                         <h3>Jatuhkan files disini atau klik untuk upload.</h3>
@@ -113,3 +104,23 @@
         
     </div>
 </div>
+<script>
+window.APP = {
+    UPLOAD_CONFIG: {
+        place: '{$uploadConfig.place}',
+        key: '{$uploadConfig.key}',
+        uploadUrl: '{$uploadConfig.uploadUrlImg}',
+        uploadFolder: 'images',
+        uploadType: 'image',
+        jenis: ''
+    },
+    getUrl: '{$BASE_URL}{$ADMIN_URL}'
+};
+</script>
+<script type="module">
+import { initDropzone } from '/plugins/default/assets/js/dropzone-upload.js';
+
+document.addEventListener('DOMContentLoaded', () => {
+    initDropzone('#myAwesomeDropzone');
+});
+</script>

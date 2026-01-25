@@ -132,9 +132,9 @@ function getRealIpAddr(){
         }
     }
 }
-function response_json($number, $type = false, $message){
+function response_json($number, $type = false, $message, $data = null){
     http_response_code($number);
-    echo json_encode(['status' => $type, 'message' => $message]);
+    echo json_encode(['status' => $type, 'message' => $message, 'data' => $data]);
 }
 
 // detect user agent and IP
@@ -350,10 +350,31 @@ function pdo_select(
     $conditions = [];
 
     foreach ($where as $col => $val) {
-        $param = str_replace('.', '_', $col);
-        $conditions[] = "{$col} = :{$param}";
-        $params[$param] = $val;
+
+        if (preg_match('/\s+(>=|<=|<>|!=|>|<|LIKE|IN)$/i', $col, $m)) {
+            $operator = strtoupper($m[1]);
+            $column = trim(str_replace($m[0], '', $col));
+        } else {
+            $operator = '=';
+            $column = $col;
+        }
+
+        $param = str_replace('.', '_', $column) . count($params);
+
+        if ($operator === 'IN' && is_array($val)) {
+            $inParams = [];
+            foreach ($val as $i => $v) {
+                $p = "{$param}_{$i}";
+                $inParams[] = ":{$p}";
+                $params[$p] = $v;
+            }
+            $conditions[] = "{$column} IN (" . implode(',', $inParams) . ")";
+        } else {
+            $conditions[] = "{$column} {$operator} :{$param}";
+            $params[$param] = $val;
+        }
     }
+
 
     /* ======================
        SEARCH (LIKE)
@@ -755,13 +776,12 @@ function pdo_paginate(
         return (int) $stmt->fetchColumn();
     }
 
-
     function upload_file(array $file, array $config = [])
     {
         $defaults = [
             'upload_path' => 'public/uploads',
             'allowed_mime' => [],
-            'max_size' => 5 * 1024 * 1024, // 5MB
+            'max_size' => 5 * 1024 * 1024,
             'prefix' => 'file',
             'use_date_folder' => true
         ];
@@ -769,32 +789,46 @@ function pdo_paginate(
         $config = array_merge($defaults, $config);
 
         if ($file['error'] !== UPLOAD_ERR_OK) {
-            response_json(400, false, 'Upload error');
-            return;
+            $messages = [
+                UPLOAD_ERR_INI_SIZE  => 'Ukuran file melebihi batas server',
+                UPLOAD_ERR_FORM_SIZE => 'Ukuran file melebihi batas form',
+                UPLOAD_ERR_PARTIAL  => 'File terupload sebagian',
+                UPLOAD_ERR_NO_FILE  => 'File tidak ditemukan'
+            ];
+
+            return [
+                'status' => false,
+                'message' => $messages[$file['error']] ?? 'Upload error'
+            ];
         }
 
         if (!empty($config['allowed_mime']) &&
-            !array_key_exists($file['type'], $config['allowed_mime'])) {
-            response_json(400, false, 'Format file tidak diizinkan');
-            return;
+            !isset($config['allowed_mime'][$file['type']])) {
+            return [
+                'status' => false,
+                'message' => 'Format file tidak diizinkan'
+            ];
         }
 
         if ($file['size'] > $config['max_size']) {
-            response_json(400, false, 'Ukuran file terlalu besar');
-            return;
+            return [
+                'status' => false,
+                'message' => 'Ukuran file terlalu besar'
+            ];
         }
 
-        $ext = $config['allowed_mime'][$file['type']] ?? pathinfo($file['name'], PATHINFO_EXTENSION);
+        $ext = $config['allowed_mime'][$file['type']]
+            ?? pathinfo($file['name'], PATHINFO_EXTENSION);
 
-        $year = date('Y');
+        $year  = date('Y');
         $month = date('m');
 
         $basePath = ROOT_PATH . '/' . trim($config['upload_path'], '/');
-        $urlPath = trim($config['upload_path'], '/');
+        $urlPath  = trim($config['upload_path'], '/');
 
         if ($config['use_date_folder']) {
             $basePath .= "/$year/$month";
-            $urlPath .= "/$year/$month";
+            $urlPath  .= "/$year/$month";
         }
 
         if (!is_dir($basePath)) {
@@ -802,18 +836,20 @@ function pdo_paginate(
         }
 
         $filename = $config['prefix'] . '_' . time() . '_' . rand(100,999) . '.' . $ext;
-        $target = $basePath . '/' . $filename;
-        $urlPath .= '/' . $filename;
+        $target   = $basePath . '/' . $filename;
 
         if (!move_uploaded_file($file['tmp_name'], $target)) {
-            response_json(400, false, 'Gagal menyimpan file');
-            return;
+            return [
+                'status' => false,
+                'message' => 'Gagal menyimpan file'
+            ];
         }
 
         return [
             'status' => true,
+            'message' => 'File berhasil diupload',
             'data' => [
-                'file_path' => $urlPath,
+                'file_path' => $urlPath . '/' . $filename,
                 'file_name' => $filename,
                 'file_original_name' => $file['name'],
                 'file_type' => $ext,
@@ -821,6 +857,7 @@ function pdo_paginate(
             ]
         ];
     }
+
     // use {$row.file_size|@format_file_size}
     function format_file_size($bytes)
     {
@@ -859,6 +896,19 @@ function pdo_paginate(
             $up->execute([':lid'=>$logId, ':sid'=>$rowId]);
         }
         return $logId;
+    }
+    
+    function slugify($text){
+        $text = preg_replace('~[^\pL\d]+~u', '-', $text);
+        $text = iconv('utf-8', 'us-ascii//TRANSLIT', $text);
+        $text = preg_replace('~[^-\w]+~', '', $text);
+        $text = trim($text, '-');
+        $text = preg_replace('~-+~', '-', $text);
+        $text = strtoupper($text);
+        if (empty($text)) {
+            return 'n-a';
+        }
+        return $text;
     }
 
 // ==============================
@@ -949,9 +999,6 @@ function routeGroup(string $prefix, callable $callback, callable $middleware = n
     $routeGroupPrefix = $previousPrefix;
     $routeGroupMiddleware = $previousMiddleware;
 }
-
-
-
 
 // ==============================
 // VIEW HELPER
