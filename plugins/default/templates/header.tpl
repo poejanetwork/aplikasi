@@ -76,29 +76,7 @@
 
                     <li class="side-nav-title mt-2">Apps Menu</li>
 
-                    <li class="side-nav-item " data-pagename="users,user_group">
-                        <a data-bs-toggle="collapse" href="#sidebarUsers1" aria-expanded="false" aria-controls="sidebarUsers1" class="side-nav-link">
-                            <span class="menu-icon"><i class="ti ti-file-invoice"></i></span>
-                            <span class="menu-text"> Users</span>
-                            <span class="menu-arrow"></span>
-                        </a>
-                        <div class="collapse" id="sidebarUsers1">
-                            <ul class="sub-menu">
-                                <li class="side-nav-item">
-                                    <a href="{'users'|surl}" class="side-nav-link">
-                                        <span class="menu-text">Lihat User</span>
-                                    </a>
-                                </li>
-                                <li class="side-nav-item">
-                                    <a href="{'user_group'|surl}" class="side-nav-link">
-                                        <span class="menu-text">User Group</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </li>
-
-                    <li class="side-nav-item " data-pagename="sm,sk,disposisi">
+                    <li class="side-nav-item {if !'surat'|canAccess}d-none{/if}" data-pagename="sm,sk,disposisi">
                         <a data-bs-toggle="collapse" href="#sidebarSurat1" aria-expanded="false" aria-controls="sidebarSurat1" class="side-nav-link">
                             <span class="menu-icon"><i class="ti ti-mail-opened-filled"></i></span>
                             <span class="menu-text"> Surat</span>
@@ -125,7 +103,7 @@
                         </div>
                     </li>
 
-                    <li class="side-nav-item " data-pagename="news,news_category">
+                    <li class="side-nav-item {if !'berita'|canAccess}d-none{/if}" data-pagename="news,news_category">
                         <a data-bs-toggle="collapse" href="#sidebarNews2" aria-expanded="false" aria-controls="sidebarNews2" class="side-nav-link">
                             <span class="menu-icon"><i class="ti ti-news"></i></span>
                             <span class="menu-text"> Berita</span>
@@ -147,7 +125,7 @@
                         </div>
                     </li>
 
-                    <li class="side-nav-item " data-pagename="doktrin,doktrin_categories">
+                    <li class="side-nav-item {if !'doktrin'|canAccess}d-none{/if}" data-pagename="doktrin,doktrin_categories">
                         <a data-bs-toggle="collapse" href="#sidebarData3" aria-expanded="false" aria-controls="sidebarData3" class="side-nav-link">
                             <span class="menu-icon"><i class="ti ti-api-app"></i></span>
                             <span class="menu-text"> Data</span>
@@ -174,14 +152,41 @@
                         </div>
                     </li>
 
-                    <li class="side-nav-item " data-pagename="contents">
-                        <a href="contents" class="side-nav-link">
-                            <span class="menu-icon"><i class="ti ti-folder-filled"></i></span>
-                            <span class="menu-text"> Menu </span>
+                    <li class="side-nav-item {if !'contents'|canAccess}d-none{/if}" data-pagename="contents">
+                        <a href="{'contents'|surl}" class="side-nav-link">
+                            <span class="menu-icon"><i class="ti ti-box-multiple"></i></span>
+                            <span class="menu-text"> Menu Konten</span>
                         </a>
                     </li>
 
-                    <li class="side-nav-item " data-pagename="settings_general,settings_seo,settings_security">
+                    <li class="side-nav-item {if !'users'|canAccess}d-none{/if}" data-pagename="users,user_group,user_privilege">
+                        <a data-bs-toggle="collapse" href="#sidebarUsers1" aria-expanded="false" aria-controls="sidebarUsers1" class="side-nav-link">
+                            <span class="menu-icon"><i class="ti ti-file-invoice"></i></span>
+                            <span class="menu-text"> Users</span>
+                            <span class="menu-arrow"></span>
+                        </a>
+                        <div class="collapse" id="sidebarUsers1">
+                            <ul class="sub-menu">
+                                <li class="side-nav-item">
+                                    <a href="{'users'|surl}" class="side-nav-link">
+                                        <span class="menu-text">Lihat User</span>
+                                    </a>
+                                </li>
+                                <li class="side-nav-item">
+                                    <a href="{'user_group'|surl}" class="side-nav-link">
+                                        <span class="menu-text">User Group</span>
+                                    </a>
+                                </li>
+                                <li class="side-nav-item">
+                                    <a href="{'user_privilege'|surl}" class="side-nav-link">
+                                        <span class="menu-text">Akses User Group</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+
+                    <li class="side-nav-item {if !'settings'|canAccess}d-none{/if}" data-pagename="settings">
                         <a data-bs-toggle="collapse" href="#sidebarSettings2" aria-expanded="false" aria-controls="sidebarSettings2" class="side-nav-link">
                             <span class="menu-icon"><i class="ti ti-settings"></i></span>
                             <span class="menu-text"> Pengaturan</span>
@@ -190,17 +195,17 @@
                         <div class="collapse" id="sidebarSettings2">
                             <ul class="sub-menu">
                                 <li class="side-nav-item">
-                                    <a href="?p=settings_general" class="side-nav-link">
+                                    <a href="{'settings'|surl}" class="side-nav-link">
                                         <span class="menu-text">Umum</span>
                                     </a>
                                 </li>
                                 <li class="side-nav-item">
-                                    <a href="?p=settings_seo" class="side-nav-link">
+                                    <a href="{'seo'|surl}" class="side-nav-link">
                                         <span class="menu-text">URL SEO</span>
                                     </a>
                                 </li>
                                 <li class="side-nav-item">
-                                    <a href="?p=settings_security" class="side-nav-link">
+                                    <a href="{'security'|surl}" class="side-nav-link">
                                         <span class="menu-text">Keamanan</span>
                                     </a>
                                 </li>
@@ -208,8 +213,8 @@
                         </div>
                     </li>
 
-                    <li class="side-nav-item " data-pagename="supports">
-                        <a href="?p=supports" class="side-nav-link">
+                    <li class="side-nav-item {if !'bantuan'|canAccess}d-none{/if}" data-pagename="supports">
+                        <a href="{'supports'|surl}" class="side-nav-link">
                             <span class="menu-icon"><i class="ti ti-message-filled"></i></span>
                             <span class="menu-text"> Bantuan </span>
                         </a>
@@ -296,7 +301,7 @@
                             <a class="topbar-link btn btn-outline-primary dropdown-toggle drop-arrow-none" data-bs-toggle="dropdown" data-bs-offset="0,22" type="button" aria-haspopup="false" aria-expanded="false">
                                 <img src="{$theme}/assets/images/users/avatar-1.png" width="24" class="rounded-circle me-lg-2 d-flex" alt="user-image">
                                 <span class="d-lg-flex flex-column gap-1 d-none">
-                                    <?= $admin_details['fullname'] ;?>.
+                                    {$admin_details.fullname}
                                 </span>
                                 <i class="ti ti-chevron-down d-none d-lg-block align-middle ms-2"></i>
                             </a>
@@ -307,13 +312,13 @@
                                 </div>
 
                                 <!-- item-->
-                                <a href="javascript:void(0);" class="dropdown-item">
+                                <a href="{'settings'|surl}" class="dropdown-item">
                                     <i class="ti ti-settings me-1 fs-17 align-middle"></i>
                                     <span class="align-middle">Settings</span>
                                 </a>
 
                                 <!-- item-->
-                                <a href="javascript:void(0);" class="dropdown-item">
+                                <a href="{'supports'|surl}" class="dropdown-item">
                                     <i class="ti ti-lifebuoy me-1 fs-17 align-middle"></i>
                                     <span class="align-middle">Support</span>
                                 </a>
@@ -321,7 +326,7 @@
                                 <div class="dropdown-divider"></div>
 
                                 <!-- item-->
-                                <a href="logout" class="dropdown-item active fw-semibold text-danger">
+                                <a href="{'logout'|surl}" class="dropdown-item active fw-semibold text-danger">
                                     <i class="ti ti-logout me-1 fs-17 align-middle"></i>
                                     <span class="align-middle">Sign Out</span>
                                 </a>
@@ -353,3 +358,5 @@
         <!-- ============================================================== -->
         <div class="page-content">
             <div class="page-container">
+
+

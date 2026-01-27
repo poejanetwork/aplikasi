@@ -1,4 +1,3 @@
-{include file="header.tpl"}
 <section id="news" class="pt-5 pb-5 bg-light">
    <div class="container-xl">
      <div class="row news_1">
@@ -8,4 +7,3 @@
     </div>
   </div>
 </section>
-{include file="footer.tpl"}

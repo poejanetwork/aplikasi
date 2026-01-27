@@ -1,18 +1,18 @@
 <?php
-/* Smarty version 5.5.1, created on 2026-01-25 19:24:55
+/* Smarty version 5.5.1, created on 2026-01-27 18:12:17
   from 'file:header.tpl' */
 
 /* @var \Smarty\Template $_smarty_tpl */
 if ($_smarty_tpl->getCompiled()->isFresh($_smarty_tpl, array (
   'version' => '5.5.1',
-  'unifunc' => 'content_69760b973366b3_54328957',
+  'unifunc' => 'content_69789d912a1987_83471580',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
     '5ca003dc04e4831eba66e8ed93dfafa0e2e87c1b' => 
     array (
       0 => 'header.tpl',
-      1 => 1769343893,
+      1 => 1769512334,
       2 => 'file',
     ),
   ),
@@ -20,7 +20,7 @@ if ($_smarty_tpl->getCompiled()->isFresh($_smarty_tpl, array (
   array (
   ),
 ))) {
-function content_69760b973366b3_54328957 (\Smarty\Template $_smarty_tpl) {
+function content_69789d912a1987_83471580 (\Smarty\Template $_smarty_tpl) {
 $_smarty_current_dir = 'C:\\xampp\\htdocs\\apli.kasi\\plugins\\default\\templates';
 ?><!DOCTYPE html>
 <html lang="en">
@@ -123,31 +123,7 @@ echo $_smarty_tpl->getValue('ADMIN_URL');?>
 
                     <li class="side-nav-title mt-2">Apps Menu</li>
 
-                    <li class="side-nav-item " data-pagename="users,user_group">
-                        <a data-bs-toggle="collapse" href="#sidebarUsers1" aria-expanded="false" aria-controls="sidebarUsers1" class="side-nav-link">
-                            <span class="menu-icon"><i class="ti ti-file-invoice"></i></span>
-                            <span class="menu-text"> Users</span>
-                            <span class="menu-arrow"></span>
-                        </a>
-                        <div class="collapse" id="sidebarUsers1">
-                            <ul class="sub-menu">
-                                <li class="side-nav-item">
-                                    <a href="<?php echo $_smarty_tpl->getSmarty()->getModifierCallback('surl')('users');?>
-" class="side-nav-link">
-                                        <span class="menu-text">Lihat User</span>
-                                    </a>
-                                </li>
-                                <li class="side-nav-item">
-                                    <a href="<?php echo $_smarty_tpl->getSmarty()->getModifierCallback('surl')('user_group');?>
-" class="side-nav-link">
-                                        <span class="menu-text">User Group</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </li>
-
-                    <li class="side-nav-item " data-pagename="sm,sk,disposisi">
+                    <li class="side-nav-item <?php if (!$_smarty_tpl->getSmarty()->getModifierCallback('canAccess')('surat')) {?>d-none<?php }?>" data-pagename="sm,sk,disposisi">
                         <a data-bs-toggle="collapse" href="#sidebarSurat1" aria-expanded="false" aria-controls="sidebarSurat1" class="side-nav-link">
                             <span class="menu-icon"><i class="ti ti-mail-opened-filled"></i></span>
                             <span class="menu-text"> Surat</span>
@@ -177,7 +153,7 @@ echo $_smarty_tpl->getValue('ADMIN_URL');?>
                         </div>
                     </li>
 
-                    <li class="side-nav-item " data-pagename="news,news_category">
+                    <li class="side-nav-item <?php if (!$_smarty_tpl->getSmarty()->getModifierCallback('canAccess')('berita')) {?>d-none<?php }?>" data-pagename="news,news_category">
                         <a data-bs-toggle="collapse" href="#sidebarNews2" aria-expanded="false" aria-controls="sidebarNews2" class="side-nav-link">
                             <span class="menu-icon"><i class="ti ti-news"></i></span>
                             <span class="menu-text"> Berita</span>
@@ -201,7 +177,7 @@ echo $_smarty_tpl->getValue('ADMIN_URL');?>
                         </div>
                     </li>
 
-                    <li class="side-nav-item " data-pagename="doktrin,doktrin_categories">
+                    <li class="side-nav-item <?php if (!$_smarty_tpl->getSmarty()->getModifierCallback('canAccess')('doktrin')) {?>d-none<?php }?>" data-pagename="doktrin,doktrin_categories">
                         <a data-bs-toggle="collapse" href="#sidebarData3" aria-expanded="false" aria-controls="sidebarData3" class="side-nav-link">
                             <span class="menu-icon"><i class="ti ti-api-app"></i></span>
                             <span class="menu-text"> Data</span>
@@ -231,14 +207,45 @@ echo $_smarty_tpl->getValue('ADMIN_URL');?>
                         </div>
                     </li>
 
-                    <li class="side-nav-item " data-pagename="contents">
-                        <a href="contents" class="side-nav-link">
-                            <span class="menu-icon"><i class="ti ti-folder-filled"></i></span>
-                            <span class="menu-text"> Menu </span>
+                    <li class="side-nav-item <?php if (!$_smarty_tpl->getSmarty()->getModifierCallback('canAccess')('contents')) {?>d-none<?php }?>" data-pagename="contents">
+                        <a href="<?php echo $_smarty_tpl->getSmarty()->getModifierCallback('surl')('contents');?>
+" class="side-nav-link">
+                            <span class="menu-icon"><i class="ti ti-box-multiple"></i></span>
+                            <span class="menu-text"> Menu Konten</span>
                         </a>
                     </li>
 
-                    <li class="side-nav-item " data-pagename="settings_general,settings_seo,settings_security">
+                    <li class="side-nav-item <?php if (!$_smarty_tpl->getSmarty()->getModifierCallback('canAccess')('users')) {?>d-none<?php }?>" data-pagename="users,user_group,user_privilege">
+                        <a data-bs-toggle="collapse" href="#sidebarUsers1" aria-expanded="false" aria-controls="sidebarUsers1" class="side-nav-link">
+                            <span class="menu-icon"><i class="ti ti-file-invoice"></i></span>
+                            <span class="menu-text"> Users</span>
+                            <span class="menu-arrow"></span>
+                        </a>
+                        <div class="collapse" id="sidebarUsers1">
+                            <ul class="sub-menu">
+                                <li class="side-nav-item">
+                                    <a href="<?php echo $_smarty_tpl->getSmarty()->getModifierCallback('surl')('users');?>
+" class="side-nav-link">
+                                        <span class="menu-text">Lihat User</span>
+                                    </a>
+                                </li>
+                                <li class="side-nav-item">
+                                    <a href="<?php echo $_smarty_tpl->getSmarty()->getModifierCallback('surl')('user_group');?>
+" class="side-nav-link">
+                                        <span class="menu-text">User Group</span>
+                                    </a>
+                                </li>
+                                <li class="side-nav-item">
+                                    <a href="<?php echo $_smarty_tpl->getSmarty()->getModifierCallback('surl')('user_privilege');?>
+" class="side-nav-link">
+                                        <span class="menu-text">Akses User Group</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+
+                    <li class="side-nav-item <?php if (!$_smarty_tpl->getSmarty()->getModifierCallback('canAccess')('settings')) {?>d-none<?php }?>" data-pagename="settings">
                         <a data-bs-toggle="collapse" href="#sidebarSettings2" aria-expanded="false" aria-controls="sidebarSettings2" class="side-nav-link">
                             <span class="menu-icon"><i class="ti ti-settings"></i></span>
                             <span class="menu-text"> Pengaturan</span>
@@ -247,17 +254,20 @@ echo $_smarty_tpl->getValue('ADMIN_URL');?>
                         <div class="collapse" id="sidebarSettings2">
                             <ul class="sub-menu">
                                 <li class="side-nav-item">
-                                    <a href="?p=settings_general" class="side-nav-link">
+                                    <a href="<?php echo $_smarty_tpl->getSmarty()->getModifierCallback('surl')('settings');?>
+" class="side-nav-link">
                                         <span class="menu-text">Umum</span>
                                     </a>
                                 </li>
                                 <li class="side-nav-item">
-                                    <a href="?p=settings_seo" class="side-nav-link">
+                                    <a href="<?php echo $_smarty_tpl->getSmarty()->getModifierCallback('surl')('seo');?>
+" class="side-nav-link">
                                         <span class="menu-text">URL SEO</span>
                                     </a>
                                 </li>
                                 <li class="side-nav-item">
-                                    <a href="?p=settings_security" class="side-nav-link">
+                                    <a href="<?php echo $_smarty_tpl->getSmarty()->getModifierCallback('surl')('security');?>
+" class="side-nav-link">
                                         <span class="menu-text">Keamanan</span>
                                     </a>
                                 </li>
@@ -265,8 +275,9 @@ echo $_smarty_tpl->getValue('ADMIN_URL');?>
                         </div>
                     </li>
 
-                    <li class="side-nav-item " data-pagename="supports">
-                        <a href="?p=supports" class="side-nav-link">
+                    <li class="side-nav-item <?php if (!$_smarty_tpl->getSmarty()->getModifierCallback('canAccess')('bantuan')) {?>d-none<?php }?>" data-pagename="supports">
+                        <a href="<?php echo $_smarty_tpl->getSmarty()->getModifierCallback('surl')('supports');?>
+" class="side-nav-link">
                             <span class="menu-icon"><i class="ti ti-message-filled"></i></span>
                             <span class="menu-text"> Bantuan </span>
                         </a>
@@ -360,9 +371,8 @@ echo $_smarty_tpl->getValue('ADMIN_URL');?>
                                 <img src="<?php echo $_smarty_tpl->getValue('theme');?>
 /assets/images/users/avatar-1.png" width="24" class="rounded-circle me-lg-2 d-flex" alt="user-image">
                                 <span class="d-lg-flex flex-column gap-1 d-none">
-                                    <?php echo '<?'; ?>
-= $admin_details['fullname'] ;<?php echo '?>'; ?>
-.
+                                    <?php echo $_smarty_tpl->getValue('admin_details')['fullname'];?>
+
                                 </span>
                                 <i class="ti ti-chevron-down d-none d-lg-block align-middle ms-2"></i>
                             </a>
@@ -373,13 +383,15 @@ echo $_smarty_tpl->getValue('ADMIN_URL');?>
                                 </div>
 
                                 <!-- item-->
-                                <a href="javascript:void(0);" class="dropdown-item">
+                                <a href="<?php echo $_smarty_tpl->getSmarty()->getModifierCallback('surl')('settings');?>
+" class="dropdown-item">
                                     <i class="ti ti-settings me-1 fs-17 align-middle"></i>
                                     <span class="align-middle">Settings</span>
                                 </a>
 
                                 <!-- item-->
-                                <a href="javascript:void(0);" class="dropdown-item">
+                                <a href="<?php echo $_smarty_tpl->getSmarty()->getModifierCallback('surl')('supports');?>
+" class="dropdown-item">
                                     <i class="ti ti-lifebuoy me-1 fs-17 align-middle"></i>
                                     <span class="align-middle">Support</span>
                                 </a>
@@ -387,7 +399,8 @@ echo $_smarty_tpl->getValue('ADMIN_URL');?>
                                 <div class="dropdown-divider"></div>
 
                                 <!-- item-->
-                                <a href="logout" class="dropdown-item active fw-semibold text-danger">
+                                <a href="<?php echo $_smarty_tpl->getSmarty()->getModifierCallback('surl')('logout');?>
+" class="dropdown-item active fw-semibold text-danger">
                                     <i class="ti ti-logout me-1 fs-17 align-middle"></i>
                                     <span class="align-middle">Sign Out</span>
                                 </a>
@@ -418,5 +431,8 @@ echo $_smarty_tpl->getValue('ADMIN_URL');?>
         <!-- Start Page Content here -->
         <!-- ============================================================== -->
         <div class="page-content">
-            <div class="page-container"><?php }
+            <div class="page-container">
+
+
+<?php }
 }

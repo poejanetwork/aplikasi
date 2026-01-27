@@ -1,18 +1,18 @@
 <?php
-/* Smarty version 5.5.1, created on 2026-01-24 08:03:55
+/* Smarty version 5.5.1, created on 2026-01-27 14:56:51
   from 'file:header.tpl' */
 
 /* @var \Smarty\Template $_smarty_tpl */
 if ($_smarty_tpl->getCompiled()->isFresh($_smarty_tpl, array (
   'version' => '5.5.1',
-  'unifunc' => 'content_69741a7b80f0e0_78513356',
+  'unifunc' => 'content_69786fc3edfda1_83713357',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
     '60c034b32f3f18d3f0ea5f1b6bd62fa1f2aee732' => 
     array (
       0 => 'header.tpl',
-      1 => 1769216633,
+      1 => 1769500607,
       2 => 'file',
     ),
   ),
@@ -20,7 +20,7 @@ if ($_smarty_tpl->getCompiled()->isFresh($_smarty_tpl, array (
   array (
   ),
 ))) {
-function content_69741a7b80f0e0_78513356 (\Smarty\Template $_smarty_tpl) {
+function content_69786fc3edfda1_83713357 (\Smarty\Template $_smarty_tpl) {
 $_smarty_current_dir = 'C:\\xampp\\htdocs\\apli.kasi\\theme\\default\\templates';
 ?><!DOCTYPE html>
 <html lang="en">
@@ -28,11 +28,16 @@ $_smarty_current_dir = 'C:\\xampp\\htdocs\\apli.kasi\\theme\\default\\templates'
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title><?php echo $_smarty_tpl->getValue('settings')['sitename'];?>
+	<title><?php echo $_smarty_tpl->getValue('pagetitle');?>
+ | <?php echo $_smarty_tpl->getValue('settings')['APP_NAME'];?>
 </title>
+	<meta name="description" content="<?php echo $_smarty_tpl->getValue('settings')['APP_DESCRIPTION'];?>
+">
+	<meta name="keywords" content="<?php echo $_smarty_tpl->getValue('settings')['APP_KEYWORD'];?>
+">
 	<link href="<?php echo $_smarty_tpl->getValue('theme');?>
 /assets/css/bootstrap.min.css" rel="stylesheet" >
-	 <link href="<?php echo $_smarty_tpl->getValue('theme');?>
+	<link href="<?php echo $_smarty_tpl->getValue('theme');?>
 /assets/fonts/css/fontawesome.min.css" rel="stylesheet" >
 	<link href="<?php echo $_smarty_tpl->getValue('theme');?>
 /assets/fonts/css/brands.min.css" rel="stylesheet" />
@@ -56,7 +61,7 @@ $_smarty_current_dir = 'C:\\xampp\\htdocs\\apli.kasi\\theme\\default\\templates'
 		 <li class="gray_dark mx-2">/</li>
 		 <li class="nav-item dropdown">
           <a class="dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Language: <span class="col_yellow">EN</span> <img src="<?php echo $_smarty_tpl->getValue('theme');?>
+            Language: <span class="col_blue">EN</span> <img src="<?php echo $_smarty_tpl->getValue('theme');?>
 /assets/image/icons-svg/chevron-down.svg" width="10" height="10" alt="Submenu open/close icon">
           </a>
           <ul class="dropdown-menu drop_top shadow" aria-labelledby="navbarDropdown">
@@ -69,7 +74,7 @@ $_smarty_current_dir = 'C:\\xampp\\htdocs\\apli.kasi\\theme\\default\\templates'
 		<li class="gray_dark mx-2">/</li>
 		 <li class="nav-item dropdown">
           <a class="dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Currency: <span class="col_yellow">Usd</span> <img src="<?php echo $_smarty_tpl->getValue('theme');?>
+            Currency: <span class="col_blue">Usd</span> <img src="<?php echo $_smarty_tpl->getValue('theme');?>
 /assets/image/icons-svg/chevron-down.svg" width="10" height="10" alt="Submenu open/close icon">
           </a>
           <ul class="dropdown-menu drop_top shadow" aria-labelledby="navbarDropdown">
@@ -80,7 +85,7 @@ $_smarty_current_dir = 'C:\\xampp\\htdocs\\apli.kasi\\theme\\default\\templates'
           </ul>
         </li>
 		 <li class="gray_dark mx-2">/</li>
-		 <li><a class="text-white" href="#">Wishlist <span class="col_yellow">7</span></a></li>
+		 <li><a class="text-white" href="#">Wishlist <span class="col_blue">7</span></a></li>
 		 <li class="gray_dark mx-2">/</li>
 		 <li><a class="text-white" href="#">Your Account </a></li>
 		</ul>
@@ -89,7 +94,7 @@ $_smarty_current_dir = 'C:\\xampp\\htdocs\\apli.kasi\\theme\\default\\templates'
    </div>
  </section>
  
- <section id="header_top" class="bg_black pt-3 pb-3">
+ <section id="header_top" class="bg_black pt-3 pb-3 d-none">
    <div class="container-xl">
      <div class="row header_top_1 pt-1">
 	  <div class="col-md-12">
@@ -99,37 +104,38 @@ $_smarty_current_dir = 'C:\\xampp\\htdocs\\apli.kasi\\theme\\default\\templates'
 			<input type="text" class="form-control bg-transparent border-0 font_10 text-white" placeholder="Cari berita disini...">
 			<span class="input-group-btn">
 				<button class="btn btn-primary bg-transparent border-0 rounded-0 p-1 px-3" type="button">
-					<i class="fa fa-search col_yellow font_14"></i> </button>
+					<i class="fa fa-search col_blue font_14"></i> </button>
 			</span>
 		</div>
 		</li>
 		<li class="d-flex ms-4">
-				 <span class="col_yellow fs-4 d-inline-block me-3">
+				 <span class="col_blue fs-4 d-inline-block me-3">
 				   <i class="fa fa-map-marker"></i>
 				 </span>
 				  <span class="flex-column">
 				   <b class="text-white">Alamat</b>
-				   <span class="gray_dark d-block"><?php echo $_smarty_tpl->getValue('settings')['siteaddress'];?>
+				   <span class="gray_dark d-block"><?php echo $_smarty_tpl->getValue('settings')['SITE_ADDRESS'];?>
 </span>
 				 </span>
 				</li>
 		<li class="d-flex ms-4">
-				 <span class="col_yellow fs-4 d-inline-block me-3">
+				 <span class="col_blue fs-4 d-inline-block me-3">
 				   <i class="fa fa-envelope"></i>
 				 </span>
 				  <span class="flex-column">
 				   <b class="text-white">Hubungi Kami</b>
-				   <span class="gray_dark d-block"><?php echo $_smarty_tpl->getValue('settings')['system_email'];?>
+				   <span class="gray_dark d-block"><?php echo $_smarty_tpl->getValue('settings')['SYSTEM_EMAIL'];?>
 </span>
 				 </span>
 				</li>
 				<li class="d-flex ms-4">
-				 <span class="col_yellow fs-4 d-inline-block me-3">
+				 <span class="col_blue fs-4 d-inline-block me-3">
 				   <i class="fa fa-phone"></i>
 				 </span>
 				  <span class="flex-column">
 				   <b class="text-white">Phone</b>
-				   <span class="gray_dark d-block">+ (123) 124-567-xxxx</span>
+				   <span class="gray_dark d-block">+<?php echo $_smarty_tpl->getValue('settings')['SITE_PHONE'];?>
+</span>
 				 </span>
 				</li>
 		</ul>
@@ -141,7 +147,7 @@ $_smarty_current_dir = 'C:\\xampp\\htdocs\\apli.kasi\\theme\\default\\templates'
  <section id="header">
         <nav class="navbar navbar-expand-lg navbar-light w-100">
       <div class="container-xl">
-         <a class="d-flex text-white" href="<?php echo $_smarty_tpl->getValue('settings')['siteurl'];?>
+         <a class="d-flex text-white" href="<?php echo $_smarty_tpl->getValue('settings')['BASE_URL'];?>
 ">
 			 <b class="fs-4  d-block text-uppercase logo bg_black p-2 px-3"> <img src="<?php echo $_smarty_tpl->getValue('theme');?>
 /assets/image/logo.png" class="me-1" width="35" height="36"> Tuanku Tambusai</b>
@@ -152,9 +158,9 @@ $_smarty_current_dir = 'C:\\xampp\\htdocs\\apli.kasi\\theme\\default\\templates'
          </button>
          <div class="offcanvas offcanvas-start offcanvas-nav" style="width: 20rem">
             <div class="offcanvas-header shadow">
-			    <a class="d-flex text-white" href="<?php echo $_smarty_tpl->getValue('settings')['siteurl'];?>
+			    <a class="d-flex text-white" href="<?php echo $_smarty_tpl->getValue('settings')['BASE_URL'];?>
 ">
-					 <b class="fs-4  d-block text-uppercase logo"> <i class="fa-brands fa-nfc-directional col_yellow me-1"></i> Tuanku Tambusai</b>
+					 <b class="fs-4  d-block text-uppercase logo"> <i class="fa-brands fa-nfc-directional col_blue me-1"></i> Tuanku Tambusai</b>
 				 </a>
                <img src="<?php echo $_smarty_tpl->getValue('theme');?>
 /assets/image/icons-svg/x.svg" width="40" height="40" class="ms-auto" data-bs-dismiss="offcanvas" aria-label="Close" alt="Close TemplateOnweb website menu"/>
@@ -163,7 +169,7 @@ $_smarty_current_dir = 'C:\\xampp\\htdocs\\apli.kasi\\theme\\default\\templates'
             <div class="offcanvas-body pt-0 align-items-center">
                <ul class="navbar-nav align-items-lg-center ms-auto">
 			      <li class="nav-item"> 
-				      <a class="nav-link dropdown-toggle active" href="<?php echo $_smarty_tpl->getValue('settings')['siteurl'];?>
+				      <a class="nav-link dropdown-toggle active" href="<?php echo $_smarty_tpl->getValue('settings')['BASE_URL'];?>
 " title="Visit home page">
 					  Home
 					  </a>
@@ -175,15 +181,20 @@ $_smarty_current_dir = 'C:\\xampp\\htdocs\\apli.kasi\\theme\\default\\templates'
 /assets/image/icons-svg/chevron-down.svg" width="15" height="15" alt="Submenu open/close icon">
 					</a>
 					<ul class="dropdown-menu drop_1 shadow" aria-labelledby="navbarDropdown">
-						<li><a class="dropdown-item" href='<?php echo $_smarty_tpl->getSmarty()->getModifierCallback('surl')("?p=contents&1");?>
+						<li><a class="dropdown-item" href='<?php echo $_smarty_tpl->getSmarty()->getModifierCallback('surl')("contents/sapta-marga");?>
 '> Sapta Marga</a></li>
-						<li><a class="dropdown-item" href='<?php echo $_smarty_tpl->getSmarty()->getModifierCallback('surl')("?p=contents&2");?>
+						<li><a class="dropdown-item" href='<?php echo $_smarty_tpl->getSmarty()->getModifierCallback('surl')("contents/sumpah-prajurit");?>
 '> Sumpah Prajurit</a></li>
-						<li><a class="dropdown-item" href='#'> 8 Wajib TNI</a></li>
-						<li><a class="dropdown-item" href='#'> 11 Azas Kepemimpinan</a></li>
-						<li><a class="dropdown-item" href='#'> Panca Prasetya Korpri</a></li>
-						<li><a class="dropdown-item" href='#'> Perintah Harian Panglima TNI</a></li>
-						<li><a class="dropdown-item border-0" href='#'> Perintah Harian Kasad</a></li>
+						<li><a class="dropdown-item" href='<?php echo $_smarty_tpl->getSmarty()->getModifierCallback('surl')("contents/8-wajib-tni");?>
+'> 8 Wajib TNI</a></li>
+						<li><a class="dropdown-item" href='<?php echo $_smarty_tpl->getSmarty()->getModifierCallback('surl')("contents/sumpah-prajurit");?>
+'> 11 Azas Kepemimpinan</a></li>
+						<li><a class="dropdown-item" href='<?php echo $_smarty_tpl->getSmarty()->getModifierCallback('surl')("contents/sumpah-prajurit");?>
+'> Panca Prasetya Korpri</a></li>
+						<li><a class="dropdown-item" href='<?php echo $_smarty_tpl->getSmarty()->getModifierCallback('surl')("contents/sumpah-prajurit");?>
+'> Perintah Harian Panglima TNI</a></li>
+						<li><a class="dropdown-item border-0" href='<?php echo $_smarty_tpl->getSmarty()->getModifierCallback('surl')("contents/sumpah-prajurit");?>
+'> Perintah Harian Kasad</a></li>
 					</ul>
 					</li>
 
@@ -193,11 +204,12 @@ $_smarty_current_dir = 'C:\\xampp\\htdocs\\apli.kasi\\theme\\default\\templates'
 /assets/image/icons-svg/chevron-down.svg" width="15" height="15" alt="Submenu open/close icon">
 					</a>
 					<ul class="dropdown-menu drop_1 shadow" aria-labelledby="navbarDropdown">
-						<li><a class="dropdown-item" href='<?php echo $_smarty_tpl->getSmarty()->getModifierCallback('surl')("?p=custom_pages&1");?>
+						<li><a class="dropdown-item" href='<?php echo $_smarty_tpl->getSmarty()->getModifierCallback('surl')("contents/struktur-orgas");?>
 '> Struktur Orgas</a></li>
-						<li><a class="dropdown-item" href='<?php echo $_smarty_tpl->getSmarty()->getModifierCallback('surl')("?p=custom_pages&2");?>
+						<li><a class="dropdown-item" href='<?php echo $_smarty_tpl->getSmarty()->getModifierCallback('surl')("contents/visi-misi");?>
 '> Visi & Misi</a></li>
-						<li><a class="dropdown-item border-0" href='#'> Tugas Pokok</a></li>
+						<li><a class="dropdown-item border-0" href='<?php echo $_smarty_tpl->getSmarty()->getModifierCallback('surl')("contents/tugas-pokok");?>
+'> Tugas Pokok</a></li>
 					</ul>
 					</li>
 				  
@@ -207,27 +219,25 @@ $_smarty_current_dir = 'C:\\xampp\\htdocs\\apli.kasi\\theme\\default\\templates'
 /assets/image/icons-svg/chevron-down.svg" width="15" height="15" alt="Submenu open/close icon">
 					</a>
 					<ul class="dropdown-menu drop_1 shadow" aria-labelledby="navbarDropdown">
-						<li><a class="dropdown-item" href='<?php echo $_smarty_tpl->getSmarty()->getModifierCallback('surl')("?p=custom_pages&1");?>
+						<li><a class="dropdown-item" href='<?php echo $_smarty_tpl->getSmarty()->getModifierCallback('surl')("contents/lambang");?>
 '> Lambang</a></li>
-						<li><a class="dropdown-item" href='<?php echo $_smarty_tpl->getSmarty()->getModifierCallback('surl')("?p=custom_pages&2");?>
+						<li><a class="dropdown-item" href='<?php echo $_smarty_tpl->getSmarty()->getModifierCallback('surl')("contents/pataka");?>
 '> Pataka</a></li>
-						<li><a class="dropdown-item border-0" href='#'> Mars</a></li>
+						<li><a class="dropdown-item border-0" href='<?php echo $_smarty_tpl->getSmarty()->getModifierCallback('surl')("contents/mars");?>
+'> Mars</a></li>
 					</ul>
 					</li>
 		
-		          <li class="nav-item dropdown drop_border">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            News<img src="<?php echo $_smarty_tpl->getValue('theme');?>
-/assets/image/icons-svg/chevron-down.svg" width="15" height="15" alt="Submenu open/close icon">
-          </a>
-          <ul class="dropdown-menu drop_1 shadow" aria-labelledby="navbarDropdown">
-            <li><a class="dropdown-item" href="news.html"> News</a></li>
-			<li><a class="dropdown-item border-0" href="news_detail.html"> News Detail</a></li>
-          </ul>
-        </li>
+				  <li class="nav-item"> 
+				      <a class="nav-link dropdown-toggle" href="<?php echo $_smarty_tpl->getSmarty()->getModifierCallback('surl')('login');?>
+" title="Masuk">
+					  Masuk
+					  </a>
+				  </li>
 				  
 				  <li class="nav-item"> 
-				      <a class="nav-link dropdown-toggle" href="login" title="Visit home page">
+				      <a class="nav-link dropdown-toggle" href="<?php echo $_smarty_tpl->getSmarty()->getModifierCallback('surl')('contact');?>
+" title="Hubungi Kami">
 					  Contact Us
 					  </a>
 				  </li>

@@ -4,9 +4,11 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>{$settings.sitename}</title>
+	<title>{$pagetitle} | {$settings.APP_NAME}</title>
+	<meta name="description" content="{$settings.APP_DESCRIPTION}">
+	<meta name="keywords" content="{$settings.APP_KEYWORD}">
 	<link href="{$theme}/assets/css/bootstrap.min.css" rel="stylesheet" >
-	 <link href="{$theme}/assets/fonts/css/fontawesome.min.css" rel="stylesheet" >
+	<link href="{$theme}/assets/fonts/css/fontawesome.min.css" rel="stylesheet" >
 	<link href="{$theme}/assets/fonts/css/brands.min.css" rel="stylesheet" />
     <link href="{$theme}/assets/fonts/css/solid.min.css" rel="stylesheet" />
 	<link href="{$theme}/assets/css/global.css" rel="stylesheet">
@@ -25,7 +27,7 @@
 		 <li class="gray_dark mx-2">/</li>
 		 <li class="nav-item dropdown">
           <a class="dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Language: <span class="col_yellow">EN</span> <img src="{$theme}/assets/image/icons-svg/chevron-down.svg" width="10" height="10" alt="Submenu open/close icon">
+            Language: <span class="col_blue">EN</span> <img src="{$theme}/assets/image/icons-svg/chevron-down.svg" width="10" height="10" alt="Submenu open/close icon">
           </a>
           <ul class="dropdown-menu drop_top shadow" aria-labelledby="navbarDropdown">
             <li><a class="dropdown-item" href="#"> Hindi</a></li>
@@ -37,7 +39,7 @@
 		<li class="gray_dark mx-2">/</li>
 		 <li class="nav-item dropdown">
           <a class="dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Currency: <span class="col_yellow">Usd</span> <img src="{$theme}/assets/image/icons-svg/chevron-down.svg" width="10" height="10" alt="Submenu open/close icon">
+            Currency: <span class="col_blue">Usd</span> <img src="{$theme}/assets/image/icons-svg/chevron-down.svg" width="10" height="10" alt="Submenu open/close icon">
           </a>
           <ul class="dropdown-menu drop_top shadow" aria-labelledby="navbarDropdown">
             <li><a class="dropdown-item" href="#"> Dollor</a></li>
@@ -47,7 +49,7 @@
           </ul>
         </li>
 		 <li class="gray_dark mx-2">/</li>
-		 <li><a class="text-white" href="#">Wishlist <span class="col_yellow">7</span></a></li>
+		 <li><a class="text-white" href="#">Wishlist <span class="col_blue">7</span></a></li>
 		 <li class="gray_dark mx-2">/</li>
 		 <li><a class="text-white" href="#">Your Account </a></li>
 		</ul>
@@ -56,7 +58,7 @@
    </div>
  </section>
  
- <section id="header_top" class="bg_black pt-3 pb-3">
+ <section id="header_top" class="bg_black pt-3 pb-3 d-none">
    <div class="container-xl">
      <div class="row header_top_1 pt-1">
 	  <div class="col-md-12">
@@ -66,35 +68,35 @@
 			<input type="text" class="form-control bg-transparent border-0 font_10 text-white" placeholder="Cari berita disini...">
 			<span class="input-group-btn">
 				<button class="btn btn-primary bg-transparent border-0 rounded-0 p-1 px-3" type="button">
-					<i class="fa fa-search col_yellow font_14"></i> </button>
+					<i class="fa fa-search col_blue font_14"></i> </button>
 			</span>
 		</div>
 		</li>
 		<li class="d-flex ms-4">
-				 <span class="col_yellow fs-4 d-inline-block me-3">
+				 <span class="col_blue fs-4 d-inline-block me-3">
 				   <i class="fa fa-map-marker"></i>
 				 </span>
 				  <span class="flex-column">
 				   <b class="text-white">Alamat</b>
-				   <span class="gray_dark d-block">{$settings.siteaddress}</span>
+				   <span class="gray_dark d-block">{$settings.SITE_ADDRESS}</span>
 				 </span>
 				</li>
 		<li class="d-flex ms-4">
-				 <span class="col_yellow fs-4 d-inline-block me-3">
+				 <span class="col_blue fs-4 d-inline-block me-3">
 				   <i class="fa fa-envelope"></i>
 				 </span>
 				  <span class="flex-column">
 				   <b class="text-white">Hubungi Kami</b>
-				   <span class="gray_dark d-block">{$settings.system_email}</span>
+				   <span class="gray_dark d-block">{$settings.SYSTEM_EMAIL}</span>
 				 </span>
 				</li>
 				<li class="d-flex ms-4">
-				 <span class="col_yellow fs-4 d-inline-block me-3">
+				 <span class="col_blue fs-4 d-inline-block me-3">
 				   <i class="fa fa-phone"></i>
 				 </span>
 				  <span class="flex-column">
 				   <b class="text-white">Phone</b>
-				   <span class="gray_dark d-block">+ (123) 124-567-xxxx</span>
+				   <span class="gray_dark d-block">+{$settings.SITE_PHONE}</span>
 				 </span>
 				</li>
 		</ul>
@@ -106,7 +108,7 @@
  <section id="header">
         <nav class="navbar navbar-expand-lg navbar-light w-100">
       <div class="container-xl">
-         <a class="d-flex text-white" href="{$settings.siteurl}">
+         <a class="d-flex text-white" href="{$settings.BASE_URL}">
 			 <b class="fs-4  d-block text-uppercase logo bg_black p-2 px-3"> <img src="{$theme}/assets/image/logo.png" class="me-1" width="35" height="36"> Tuanku Tambusai</b>
 	     </a>
          <button class="navbar-toggler offcanvas-nav-btn  ms-auto me-3" type="button">
@@ -114,8 +116,8 @@
          </button>
          <div class="offcanvas offcanvas-start offcanvas-nav" style="width: 20rem">
             <div class="offcanvas-header shadow">
-			    <a class="d-flex text-white" href="{$settings.siteurl}">
-					 <b class="fs-4  d-block text-uppercase logo"> <i class="fa-brands fa-nfc-directional col_yellow me-1"></i> Tuanku Tambusai</b>
+			    <a class="d-flex text-white" href="{$settings.BASE_URL}">
+					 <b class="fs-4  d-block text-uppercase logo"> <i class="fa-brands fa-nfc-directional col_blue me-1"></i> Tuanku Tambusai</b>
 				 </a>
                <img src="{$theme}/assets/image/icons-svg/x.svg" width="40" height="40" class="ms-auto" data-bs-dismiss="offcanvas" aria-label="Close" alt="Close TemplateOnweb website menu"/>
 			   
@@ -123,7 +125,7 @@
             <div class="offcanvas-body pt-0 align-items-center">
                <ul class="navbar-nav align-items-lg-center ms-auto">
 			      <li class="nav-item"> 
-				      <a class="nav-link dropdown-toggle active" href="{$settings.siteurl}" title="Visit home page">
+				      <a class="nav-link dropdown-toggle active" href="{$settings.BASE_URL}" title="Visit home page">
 					  Home
 					  </a>
 				  </li>
@@ -133,13 +135,13 @@
 						Norma<img src="{$theme}/assets/image/icons-svg/chevron-down.svg" width="15" height="15" alt="Submenu open/close icon">
 					</a>
 					<ul class="dropdown-menu drop_1 shadow" aria-labelledby="navbarDropdown">
-						<li><a class="dropdown-item" href='{"?p=contents&1"|surl}'> Sapta Marga</a></li>
-						<li><a class="dropdown-item" href='{"?p=contents&2"|surl}'> Sumpah Prajurit</a></li>
-						<li><a class="dropdown-item" href='#'> 8 Wajib TNI</a></li>
-						<li><a class="dropdown-item" href='#'> 11 Azas Kepemimpinan</a></li>
-						<li><a class="dropdown-item" href='#'> Panca Prasetya Korpri</a></li>
-						<li><a class="dropdown-item" href='#'> Perintah Harian Panglima TNI</a></li>
-						<li><a class="dropdown-item border-0" href='#'> Perintah Harian Kasad</a></li>
+						<li><a class="dropdown-item" href='{"contents/sapta-marga"|surl}'> Sapta Marga</a></li>
+						<li><a class="dropdown-item" href='{"contents/sumpah-prajurit"|surl}'> Sumpah Prajurit</a></li>
+						<li><a class="dropdown-item" href='{"contents/8-wajib-tni"|surl}'> 8 Wajib TNI</a></li>
+						<li><a class="dropdown-item" href='{"contents/sumpah-prajurit"|surl}'> 11 Azas Kepemimpinan</a></li>
+						<li><a class="dropdown-item" href='{"contents/sumpah-prajurit"|surl}'> Panca Prasetya Korpri</a></li>
+						<li><a class="dropdown-item" href='{"contents/sumpah-prajurit"|surl}'> Perintah Harian Panglima TNI</a></li>
+						<li><a class="dropdown-item border-0" href='{"contents/sumpah-prajurit"|surl}'> Perintah Harian Kasad</a></li>
 					</ul>
 					</li>
 
@@ -148,9 +150,9 @@
 						Prasaja<img src="{$theme}/assets/image/icons-svg/chevron-down.svg" width="15" height="15" alt="Submenu open/close icon">
 					</a>
 					<ul class="dropdown-menu drop_1 shadow" aria-labelledby="navbarDropdown">
-						<li><a class="dropdown-item" href='{"?p=custom_pages&1"|surl}'> Struktur Orgas</a></li>
-						<li><a class="dropdown-item" href='{"?p=custom_pages&2"|surl}'> Visi & Misi</a></li>
-						<li><a class="dropdown-item border-0" href='#'> Tugas Pokok</a></li>
+						<li><a class="dropdown-item" href='{"contents/struktur-orgas"|surl}'> Struktur Orgas</a></li>
+						<li><a class="dropdown-item" href='{"contents/visi-misi"|surl}'> Visi & Misi</a></li>
+						<li><a class="dropdown-item border-0" href='{"contents/tugas-pokok"|surl}'> Tugas Pokok</a></li>
 					</ul>
 					</li>
 				  
@@ -159,24 +161,20 @@
 						Identitas<img src="{$theme}/assets/image/icons-svg/chevron-down.svg" width="15" height="15" alt="Submenu open/close icon">
 					</a>
 					<ul class="dropdown-menu drop_1 shadow" aria-labelledby="navbarDropdown">
-						<li><a class="dropdown-item" href='{"?p=custom_pages&1"|surl}'> Lambang</a></li>
-						<li><a class="dropdown-item" href='{"?p=custom_pages&2"|surl}'> Pataka</a></li>
-						<li><a class="dropdown-item border-0" href='#'> Mars</a></li>
+						<li><a class="dropdown-item" href='{"contents/lambang"|surl}'> Lambang</a></li>
+						<li><a class="dropdown-item" href='{"contents/pataka"|surl}'> Pataka</a></li>
+						<li><a class="dropdown-item border-0" href='{"contents/mars"|surl}'> Mars</a></li>
 					</ul>
 					</li>
 		
-		          <li class="nav-item dropdown drop_border">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            News<img src="{$theme}/assets/image/icons-svg/chevron-down.svg" width="15" height="15" alt="Submenu open/close icon">
-          </a>
-          <ul class="dropdown-menu drop_1 shadow" aria-labelledby="navbarDropdown">
-            <li><a class="dropdown-item" href="news.html"> News</a></li>
-			<li><a class="dropdown-item border-0" href="news_detail.html"> News Detail</a></li>
-          </ul>
-        </li>
+				  <li class="nav-item"> 
+				      <a class="nav-link dropdown-toggle" href="{'login'|surl}" title="Masuk">
+					  Masuk
+					  </a>
+				  </li>
 				  
 				  <li class="nav-item"> 
-				      <a class="nav-link dropdown-toggle" href="login" title="Visit home page">
+				      <a class="nav-link dropdown-toggle" href="{'contact'|surl}" title="Hubungi Kami">
 					  Contact Us
 					  </a>
 				  </li>

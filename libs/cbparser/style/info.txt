@@ -1,0 +1,8 @@
+
+note..
+
+corzblog style sheets are generated at run-time.
+
+This is pared-down pre-generated version for demo purposes.
+
+;o) Cor

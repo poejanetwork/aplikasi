@@ -1,18 +1,18 @@
 <?php
-/* Smarty version 5.5.1, created on 2026-01-25 23:01:18
+/* Smarty version 5.5.1, created on 2026-01-27 10:25:56
   from 'file:news/edit.tpl' */
 
 /* @var \Smarty\Template $_smarty_tpl */
 if ($_smarty_tpl->getCompiled()->isFresh($_smarty_tpl, array (
   'version' => '5.5.1',
-  'unifunc' => 'content_69763e4e755179_21074999',
+  'unifunc' => 'content_69783044b26236_37445898',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
     '633c6c11c37f9d916ae4dec69e3095ca8365cf78' => 
     array (
       0 => 'news/edit.tpl',
-      1 => 1769356876,
+      1 => 1769484353,
       2 => 'file',
     ),
   ),
@@ -20,7 +20,7 @@ if ($_smarty_tpl->getCompiled()->isFresh($_smarty_tpl, array (
   array (
   ),
 ))) {
-function content_69763e4e755179_21074999 (\Smarty\Template $_smarty_tpl) {
+function content_69783044b26236_37445898 (\Smarty\Template $_smarty_tpl) {
 $_smarty_current_dir = 'C:\\xampp\\htdocs\\apli.kasi\\plugins\\default\\templates\\news';
 ?><link rel="stylesheet" href="/plugins/sceditor/minified/themes/default.min.css" />
 <?php echo '<script'; ?>
@@ -33,7 +33,7 @@ $_smarty_current_dir = 'C:\\xampp\\htdocs\\apli.kasi\\plugins\\default\\template
 	<div class="col-12">
 		<div class="page-title-head d-flex align-items-sm-center flex-sm-row flex-column">
 			<div class="flex-grow-1">
-				<h4 class="fs-18 text-uppercase fw-bold m-0"><?php echo $_smarty_tpl->getValue('pagename');?>
+				<h4 class="fs-18 text-uppercase fw-bold m-0"><?php echo $_smarty_tpl->getValue('pagetitle');?>
 </h4>
 			</div>
 		</div><!-- end card header -->
@@ -44,7 +44,7 @@ $_smarty_current_dir = 'C:\\xampp\\htdocs\\apli.kasi\\plugins\\default\\template
     <div class="col-12">
         <div class="card">
             <div class="card-header border-bottom border-dashed d-flex align-items-center">
-                <h4 class="header-title"><?php echo $_smarty_tpl->getValue('pagename');?>
+                <h4 class="header-title"><?php echo $_smarty_tpl->getValue('pagetitle');?>
 </h4>
             </div>
 

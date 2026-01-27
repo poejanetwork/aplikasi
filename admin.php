@@ -54,11 +54,100 @@ define('ROOT_PATH', realpath(__DIR__));
 // main function
 $config_dir = $smarty->getConfigDir(0);
 require_once $config_dir.'env.php';
+function surl($path = '') {
+    return "/" . env('ADMIN_URL'). "/" . ltrim($path, '/');
+}
+function currentUser()
+{
+    return $_SESSION['admindetails'] ?? null;
+}
 require_once $config_dir.'helpers.php';
+$smarty->registerPlugin('modifier', 'canAccess', function ($module) {
+    return canAccess($module);
+});
 $smarty->registerPlugin("modifier", "date_format_id", "date_format_id");
 $smarty->registerPlugin("modifier", "format_file_size", "format_file_size");
 $smarty->registerPlugin("modifier", "surl", "surl");
 date_default_timezone_set(env('SITE_TIMEZONE'));
+
+function sendEmail(array $to, string $subject, string $html, string $text = ''): bool
+{
+    try {
+        require_once 'libs/Exception.php';
+        require_once 'libs/PHPMailer.php'; 
+        require_once 'libs/SMTP.php';
+        $mail = new \PHPMailer\PHPMailer\PHPMailer(true);
+
+        $mail->isSMTP();
+        $mail->SMTPDebug = 0;  // 0=off, 2=server+client dialog
+        $mail->Debugoutput = function($str, $level) { echo $str; };
+        $mail->Host       = env('SMTP_HOST');
+        $mail->SMTPAuth   = true;
+        $mail->Username   = env('SMTP_USER');
+        $mail->Password   = env('SMTP_PASS');
+        $mail->SMTPSecure = env('SMTP_SECURE');
+        $mail->Port       = env('SMTP_PORT');
+
+        $mail->setFrom(env('SMTP_USER'), env('SMTP_SENDER'));
+
+        foreach ($to as $email => $name) {
+            $mail->addAddress($email, $name);
+        }
+
+        $mail->isHTML(true);
+        $mail->Subject = $subject;
+        $mail->Body    = $html;
+        $mail->MsgHTML($html);
+        $mail->AltBody = $text ?: strip_tags($html);
+
+        try {
+            $mail->send();
+        } catch (Exception $e) {
+            $text_error = 'Mailer Error ' . $mail->ErrorInfo . '<br/>';
+            logDebug($text_error);
+            $mail->getSMTPInstance()->reset();
+        }
+        $mail->clearAddresses();
+        $mail->clearAttachments();
+        return true;
+
+    } catch (Throwable $e) {
+        logDebug('MAIL ERROR: ' . $e->getMessage());
+        return false;
+    }
+}
+function supportReplyTemplate(array $support, string $reply): string
+{
+    return '
+    <html>
+    <body style="font-family:Arial,sans-serif;line-height:1.6">
+        <h2>Balasan dari Tim Support</h2>
+
+        <p>Halo <b>' . htmlspecialchars($support['name']) . '</b>,</p>
+
+        <p>Kami telah menerima pesan Anda dengan detail berikut:</p>
+
+        <blockquote style="background:#f9f9f9;padding:10px">
+            <b>Subjek:</b> ' . htmlspecialchars($support['subject']) . '<br>
+            <b>Pesan:</b><br>
+            ' . nl2br(htmlspecialchars($support['message'])) . '
+        </blockquote>
+
+        <p><b>Balasan kami:</b></p>
+
+        <div style="background:#eef;padding:10px">
+            ' . nl2br(htmlspecialchars($reply)) . '
+        </div>
+
+        <p>Terima kasih telah menghubungi kami.</p>
+
+        <hr>
+        <small>Pesan ini dikirim otomatis, mohon tidak membalas email ini.</small>
+    </body>
+    </html>
+    ';
+}
+
 
 function getSuccessCode($successCode)
 {
@@ -91,6 +180,9 @@ function getErrorCode($errorCode)
         28 => "Confirmation code is expired.",
         50 => "Password is wrong or cannot be empty.",
         51 => "Confirm Password is not same.",
+        403 => 'Akses Ditolak',
+        404 => 'Halaman Tidak Ditemukan', 
+        500 => 'Server Error',
         1062 => 'Data sudah ada (duplikat)',
         1452 => "Relasi data tidak valid",
         1048 => "Ada kolom wajib yang kosong",
@@ -114,6 +206,7 @@ function cFormat($number, ?string $decimal = null)
 // ==================================
 // LOAD ROUTES
 // ==================================
+$smarty->assign('admin_details', currentUser());
 $smarty->assign('BASE_URL', env('BASE_URL'));
 $smarty->assign('ADMIN_URL', env('ADMIN_URL'));
 $uploadConfig = [

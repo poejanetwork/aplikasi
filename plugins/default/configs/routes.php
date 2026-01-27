@@ -22,7 +22,6 @@ route('GET', '/dashboard', function () {
     ]);
 });
 
-
 // ==============================
 // USERS
 // ==============================
@@ -30,6 +29,7 @@ routeGroup('/users', function () {
 
     route('GET', '/', function () {
         view('index', [
+            'canAccess' => canAccess('users'),
             'content'   => 'users/index.tpl',
             'pagetitle' => 'Users',
             'pagename'  => 'users',
@@ -118,10 +118,10 @@ routeGroup('/users', function () {
             return;
         }
 
-        $user = pdo_select_first('users', ['id' => (int)$id], '*', [], [], 1);
+        $data = pdo_select_first('users', ['id' => (int)$id], '*', [], [], 1);
 
         view('users/edit', [
-            'user' => $user
+            'data' => $data
         ]);
     });
 
@@ -190,8 +190,399 @@ routeGroup('/users', function () {
         );
     });
 
-}, 'requireAdmin');
+}, 'requireAdmin|privilege:users');
 
+// ==============================
+// USERS GROUP
+// ==============================
+routeGroup('/user_group', function () {
+
+    route('GET', '/', function () {
+        view('index', [
+            'canAccess' => canAccess('user_group'),
+            'content'   => 'user_group/index.tpl',
+            'pagetitle' => 'Users Group',
+            'pagename'  => 'user_group',
+            'page_js'   => 'user_group.js'
+        ]);
+    });
+
+    route('GET', '/data', function () {
+        $page   = max(1, (int)($_GET['page'] ?? 1));
+        $limit  = 10;
+        $offset = ($page - 1) * $limit;
+        $searchText = trim($_GET['search'] ?? '');
+
+        $search = [
+            'keyword' => $searchText,
+            'columns' => ['group_name']
+        ];
+
+        $total = pdo_count('user_group', [], $search);
+
+        $data = pdo_paginate(
+            'user_group',
+            ['id','group_name','status'],
+            $offset,
+            $limit,
+            [],
+            [],
+            ['group_name' => 'ASC'],
+            $search
+        );
+
+        header('Content-Type: application/json');
+        echo json_encode([
+            'data' => $data,
+            'pagination' => [
+                'total'        => $total,
+                'per_page'     => $limit,
+                'current_page' => $page,
+                'last_page'    => ceil($total / $limit)
+            ]
+        ]);
+    });
+
+    route('GET', '/create', function () {
+        view('user_group/create');
+    });
+
+    route('POST', '/store', function () {
+        $rules = [
+            'group_name' => 'required',
+            'status' => 'required',
+        ];
+
+        $data = [
+            'group_name'  => $_POST['group_name'] ?? '',
+            'status' => $_POST['status'] ?? '',
+        ];
+        
+        $id = pdo_insert('user_group', $data, $rules);
+
+        if (is_array($id) && isset($id['errors'])) {
+            response_json(
+                $id['errors']['code'] ?? 400,
+                false,
+                $id['errors']['message']
+            );
+            return;
+        }
+
+        response_json(
+            200,
+            true,
+            'Data berhasil dibuat'
+        );
+    });
+    
+
+    route('GET', '/edit/{id}', function ($id) {
+        if (!is_numeric($id)) {
+            response_json(400, false, 'Invalid ID');
+            return;
+        }
+
+        $data = pdo_select_first('user_group', ['id' => (int)$id], '*', [], [], 1);
+
+        view('user_group/edit', [
+            'data' => $data
+        ]);
+    });
+
+    route('PUT', '/update/{id}', function ($id) {
+        if (!is_numeric($id)) {
+            response_json(400, false, 'Invalid ID');
+            return;
+        }
+
+        $rules = [
+            'group_name' => 'required',
+            'status' => 'required',
+        ];
+
+        $data = [
+            'group_name'  => $_POST['group_name'] ?? '',
+            'status' => $_POST['status'] ?? '',
+        ];
+
+        $ok = pdo_update('user_group', $data, ['id' => (int)$id], $rules);
+
+        header('Content-Type: application/json');
+        response_json(
+            200,
+            $ok ? true : false,
+            $ok ? 'Data berhasil diperbarui' : 'Gagal memperbarui data'
+        );
+    });
+
+    route('DELETE', '/delete/{id}', function ($id) {
+        if (!is_numeric($id)) {
+            response_json(400, false, 'Invalid ID');
+            return;
+        }
+
+        $ok = pdo_softDelete('user_group', [
+            'id'     => (int)$id,
+            'status' => 1
+        ]);
+
+        header('Content-Type: application/json');
+        response_json(
+            200,
+            $ok ? true : false,
+            $ok ? 'Data berhasil dihapus' : 'Gagal menghapus data'
+        );
+    });
+
+    route('PATCH', '/restore/{id}', function ($id) {
+        if (!is_numeric($id)) {
+            response_json(400, false, 'Invalid ID');
+            return;
+        }
+
+        $ok = pdo_restore('user_group', ['id' => (int)$id]);
+
+        header('Content-Type: application/json');
+        response_json(
+            200,
+            $ok ? true : false,
+            $ok ? 'Data berhasil dipulihkan' : 'Gagal restore data'
+        );
+    });
+
+}, 'requireAdmin|privilege:users');
+
+// ==============================
+// USERS GROUP
+// ==============================
+routeGroup('/user_privilege', function () {
+
+    route('GET', '/', function () {
+        view('index', [
+            'canAccess' => canAccess('users'),
+            'content'   => 'user_privilege/index.tpl',
+            'pagetitle' => 'Users Privilege',
+            'pagename'  => 'user_privilege',
+            'page_js'   => 'user_privilege.js'
+        ]);
+    });
+
+    route('GET', '/data', function () {
+        $page   = max(1, (int)($_GET['page'] ?? 1));
+        $limit  = 10;
+        $offset = ($page - 1) * $limit;
+        $searchText = trim($_GET['search'] ?? '');
+
+        $search = [
+            'keyword' => $searchText,
+            'columns' => ['group_name']
+        ];
+
+        $total = pdo_count('user_privilege', [], $search);
+
+        $data = pdo_paginate(
+            'user_privilege',
+            ['user_privilege.id','user_privilege.user_group_id','user_privilege.module_name','user_privilege.status','ug.group_name'],
+            $offset,
+            $limit,
+            [
+                [
+                    'type'  => 'LEFT',
+                    'table' => 'user_group ug',
+                    'on'    => 'ug.id = user_privilege.user_group_id'
+                ]
+            ],
+            [],
+            ['group_name' => 'ASC'],
+            $search
+        );
+
+        header('Content-Type: application/json');
+        echo json_encode([
+            'data' => $data,
+            'pagination' => [
+                'total'        => $total,
+                'per_page'     => $limit,
+                'current_page' => $page,
+                'last_page'    => ceil($total / $limit)
+            ]
+        ]);
+    });
+
+    route('GET', '/create', function () {
+        $userGroupList = pdo_select(
+            'user_group',
+            ['status' => 1],
+            ['id', 'group_name'],
+            [],
+            [],
+            null,
+            'group_name ASC'
+        );
+        
+        $moduleList = array(
+            'bantuan',
+            'berita',
+            'contents',
+            'doktrin',
+            'settings',
+            'surat',
+            'users',
+        );
+
+        view('user_privilege/create', [
+            'userGroupList' => $userGroupList,
+            'moduleList' => $moduleList
+        ]);
+    });
+
+    route('POST', '/store', function () {
+        $rules = [
+            'user_group_id' => 'required',
+            'module_name' => 'required',
+            'status' => 'required',
+        ];
+
+        $data = [
+            'user_group_id'  => $_POST['user_group_id'] ?? '',
+            'module_name'  => $_POST['module_name'] ?? '',
+            'status' => $_POST['status'] ?? '',
+        ];
+        
+        $id = pdo_insert('user_privilege', $data, $rules);
+
+        if (is_array($id) && isset($id['errors'])) {
+            response_json(
+                $id['errors']['code'] ?? 400,
+                false,
+                $id['errors']['message']
+            );
+            return;
+        }
+
+        response_json(
+            200,
+            true,
+            'Data berhasil dibuat'
+        );
+    });
+    
+
+    route('GET', '/edit/{id}', function ($id) {
+        if (!is_numeric($id)) {
+            response_json(400, false, 'Invalid ID');
+            return;
+        }
+        $userGroupList = pdo_select(
+            'user_group',
+            ['status' => 1],
+            ['id', 'group_name'],
+            [],
+            [],
+            null,
+            'group_name ASC'
+        );
+        
+        $moduleList = array(
+            'contents',
+            'disposisi',
+            'doktrin',
+            'doktrin_categories',
+            'news',
+            'settings',
+            'supports',
+            'surat_keluar',
+            'surat_masuk',
+            'users',
+            'user_group',
+            'user_privilege',
+        );
+
+        $data = pdo_select_first(
+            'user_privilege',
+            ['user_privilege.id' => (int)$id],
+            ['user_privilege.id','user_privilege.user_group_id','user_privilege.module_name','user_privilege.status','ug.group_name'],
+            [
+                [
+                    'type'  => 'LEFT',
+                    'table' => 'user_group ug',
+                    'on'    => 'ug.id = user_privilege.user_group_id'
+                ]
+            ], [], 1
+        );
+
+        view('user_privilege/edit', [
+            'data' => $data,
+            'userGroupList' => $userGroupList,
+            'moduleList' => $moduleList
+        ]);
+    });
+
+    route('PUT', '/update/{id}', function ($id) {
+        if (!is_numeric($id)) {
+            response_json(400, false, 'Invalid ID');
+            return;
+        }
+
+        $rules = [
+            'user_group_id' => 'required',
+            'module_name' => 'required',
+            'status' => 'required',
+        ];
+
+        $data = [
+            'user_group_id'  => $_POST['user_group_id'] ?? '',
+            'module_name'  => $_POST['module_name'] ?? '',
+            'status' => $_POST['status'] ?? '',
+        ];
+
+        $ok = pdo_update('user_privilege', $data, ['id' => (int)$id], $rules);
+
+        header('Content-Type: application/json');
+        response_json(
+            200,
+            $ok ? true : false,
+            $ok ? 'Data berhasil diperbarui' : 'Gagal memperbarui data'
+        );
+    });
+
+    route('DELETE', '/delete/{id}', function ($id) {
+        if (!is_numeric($id)) {
+            response_json(400, false, 'Invalid ID');
+            return;
+        }
+
+        $ok = pdo_softDelete('user_privilege', [
+            'id'     => (int)$id,
+            'status' => 1
+        ]);
+
+        header('Content-Type: application/json');
+        response_json(
+            200,
+            $ok ? true : false,
+            $ok ? 'Data berhasil dihapus' : 'Gagal menghapus data'
+        );
+    });
+
+    route('PATCH', '/restore/{id}', function ($id) {
+        if (!is_numeric($id)) {
+            response_json(400, false, 'Invalid ID');
+            return;
+        }
+
+        $ok = pdo_restore('user_privilege', ['id' => (int)$id]);
+
+        header('Content-Type: application/json');
+        response_json(
+            200,
+            $ok ? true : false,
+            $ok ? 'Data berhasil dipulihkan' : 'Gagal restore data'
+        );
+    });
+
+}, 'requireAdmin|privilege:users');
 
 // ==============================
 // SURAT MASUK DAN KELUAR
@@ -200,6 +591,7 @@ routeGroup('/sm', function () {
 
     route('GET', '/', function () {
         view('index', [
+            'canAccess' => canAccess('surat_masuk'),
             'content'   => 'surat_masuk/index.tpl',
             'pagetitle' => 'Surat Masuk',
             'pagename'  => 'surat_masuk',
@@ -643,7 +1035,7 @@ routeGroup('/sm', function () {
         exit;
     });
 
-}, 'requireAdmin');
+}, 'requireAdmin|privilege:surat');
 
 // ==============================
 // SURAT KELUAR
@@ -652,6 +1044,7 @@ routeGroup('/sk', function () {
 
     route('GET', '/', function () {
         view('index', [
+            'canAccess' => canAccess('surat_keluar'),
             'content'   => 'surat_keluar/index.tpl',
             'pagetitle' => 'Surat Keluar',
             'pagename'  => 'surat_keluar',
@@ -997,15 +1390,17 @@ routeGroup('/sk', function () {
         exit;
     });
 
-}, 'requireAdmin');
+}, 'requireAdmin|privilege:surat');
 
 // ==============================
 // DISPOSISI
 // ==============================
 routeGroup('/disposisi', function () {
+    
 
     route('GET', '/', function () {
         view('index', [
+            'canAccess' => canAccess('disposisi'),
             'content'   => 'disposisi/index.tpl',
             'pagetitle' => 'Disposisi',
             'pagename'  => 'disposisi',
@@ -1214,8 +1609,7 @@ routeGroup('/disposisi', function () {
         );
     });
 
-}, 'requireAdmin');
-
+}, 'requireAdmin|privilege:surat');
 
 // ==============================
 // BERITA / NEWS
@@ -1224,6 +1618,7 @@ routeGroup('/news', function () {
 
     route('GET', '/', function () {
         view('index', [
+            'canAccess' => canAccess('news'),
             'content'   => 'news/index.tpl',
             'pagetitle' => 'Berita',
             'pagename'  => 'news',
@@ -1327,6 +1722,7 @@ routeGroup('/news', function () {
 
         $data = [
             'title'  => $_POST['title'] ?? '',
+            'slug'  => generate_unique_slug($_POST['title']),
             'user_id'     => $_SESSION['admindetails']['id'] ?? '',
             'category_id'     => $_POST['category_id'] ?? '',
             "full_text_bbcode" => $full_text_bbcode ?? '',
@@ -1362,6 +1758,7 @@ routeGroup('/news', function () {
         }
 
         $id = pdo_insert('news', $data, $rules);
+        sync_news_tags($id, $data['title']);
 
         header('Content-Type: application/json');
         response_json(
@@ -1437,6 +1834,7 @@ routeGroup('/news', function () {
 
         $data = [
             'title'  => $_POST['title'] ?? '',
+            'slug'  => generate_unique_slug($_POST['title'], $id),
             'user_id'     => $_SESSION['admindetails']['id'] ?? '',
             'category_id'     => $_POST['category_id'] ?? '',
             "full_text_bbcode" => $full_text_bbcode ?? '',
@@ -1477,6 +1875,7 @@ routeGroup('/news', function () {
             ['id' => (int)$id],
             $rules
         );
+        sync_news_tags($id, $data['title']);
 
         header('Content-Type: application/json');
         response_json(
@@ -1518,7 +1917,7 @@ routeGroup('/news', function () {
         );
     });
 
-}, 'requireAdmin');
+}, 'requireAdmin|privilege:berita');
 
 // ==============================
 // NEWS CATEGORY
@@ -1613,7 +2012,7 @@ routeGroup('/news_category', function () {
         $data = pdo_select_first('news_category', ['id' => (int)$id], '*', [], [], 1);
 
         view('news_category/edit', [
-            'news_category' => $data
+            'data' => $data
         ]);
     });
 
@@ -1677,8 +2076,7 @@ routeGroup('/news_category', function () {
         );
     });
 
-}, 'requireAdmin');
-
+}, 'requireAdmin|privilege:berita');
 
 // ==============================
 // DATA PINAK/DOKTRIN
@@ -1697,6 +2095,7 @@ routeGroup('/doktrin', function () {
         );
 
         view('index', [
+            'canAccess' => canAccess('doktrin'),
             'content'   => 'doktrin/index.tpl',
             'categories' => $categoryList,
             'pagetitle' => 'Doktrin',
@@ -1988,7 +2387,7 @@ routeGroup('/doktrin', function () {
         exit;
     });
 
-}, 'requireAdmin');
+}, 'requireAdmin|privilege:doktrin');
 
 // ==============================
 // DATA PINAK CATEGORIES
@@ -1997,6 +2396,7 @@ routeGroup('/doktrin_categories', function () {
 
     route('GET', '/', function () {
         view('index', [
+            'canAccess' => canAccess('doktrin'),
             'content'   => 'doktrin_categories/index.tpl',
             'pagetitle' => 'Doktrin Categories',
             'pagename'  => 'doktrin_categories',
@@ -2072,7 +2472,6 @@ routeGroup('/doktrin_categories', function () {
             'Data berhasil dibuat'
         );
     });
-    
 
     route('GET', '/edit/{id}', function ($id) {
         if (!is_numeric($id)) {
@@ -2147,7 +2546,600 @@ routeGroup('/doktrin_categories', function () {
         );
     });
 
-}, 'requireAdmin');
+}, 'requireAdmin|privilege:doktrin');
+
+// ==============================
+// CONTENTS
+// ==============================
+routeGroup('/contents', function () {
+
+    route('GET', '/', function () {
+        view('index', [
+            'canAccess' => canAccess('contents'),
+            'content'   => 'contents/index.tpl',
+            'pagetitle' => 'Contents',
+            'pagename'  => 'contents',
+            'page_js'   => 'contents.js'
+        ]);
+    });
+
+    route('GET', '/data', function () {
+        $page   = max(1, (int)($_GET['page'] ?? 1));
+        $limit  = 10;
+        $offset = ($page - 1) * $limit;
+        $searchText = trim($_GET['search'] ?? '');
+
+        $search = [
+            'keyword' => $searchText,
+            'columns' => ['name']
+        ];
+
+        $total = pdo_count('contents', [], $search);
+
+        $data = pdo_paginate(
+            'contents',
+            [
+                'id',
+                'name',
+                'slug',
+                'status',
+            ],
+            $offset,
+            $limit,
+            [],
+            [],
+            'id DESC',
+            $search
+        );
+
+        header('Content-Type: application/json');
+        echo json_encode([
+            'data' => $data,
+            'pagination' => [
+                'total'        => $total,
+                'per_page'     => $limit,
+                'current_page' => $page,
+                'last_page'    => ceil($total / $limit)
+            ]
+        ]);
+    });
+
+    route('GET', '/create', function () {
+        view('index', [
+            'pagetype' => 'can_upload',
+            'content'   => 'contents/create.tpl',
+            'pagetitle' => 'Tambah Konten',
+            'pagename'  => 'add_contents',
+            'page_js'   => 'contents.js'
+        ]);
+    });
+
+    route('POST', '/store', function () {
+        $rules = [
+            'name' => 'required',
+            'status' => 'required'
+        ];
+
+        $page_content_bbcode = str_replace("\xc2\xa0", ' ', $_POST['full_text'] ?? '');
+        require_once("plugins/jbbcode.php");
+        $page_content_html   = parseBBCodeToHtml($page_content_bbcode);
+        preg_match('/\[img\](.*?)\[\/img\]/i', $page_content_bbcode, $match);
+
+        $data = [
+            'name'  => $_POST['name'] ?? '',
+            'slug'  => generate_unique_slug($_POST['name']),
+            "page_content_bbcode" => $page_content_bbcode ?? '',
+            "page_content_html" => $page_content_html ?? '',
+            'created_at' => date('Y-m-d H:i:s', strtotime($_POST['created_at'] ?? '')) ?? date('Y-m-d H:i:s'),
+            'status'    => $_POST['status'] ?? 0
+        ];
+
+        preg_match_all('/\[img\](.*?)\[\/img\]/i', $page_content_bbcode, $matches);
+        $imageUrls = $matches[1] ?? [];
+        $imagePaths = [];
+        foreach ($imageUrls as $url) {
+            $parsed = parse_url($url);
+
+            if (!empty($parsed['path'])) {
+                // buang slash depan jika ada
+                $path = ltrim($parsed['path'], '/');
+
+                // pastikan hanya file upload lokal
+                if (str_starts_with($path, 'public/uploads/')) {
+                    $imagePaths[] = $path;
+                }
+            }
+        }
+        foreach ($imagePaths as $path) {
+            pdo_update(
+                'uploads',
+                ['is_temp' => 0],
+                ['file_path' => $path],
+                []
+            );
+        }
+
+        $id = pdo_insert('contents', $data, $rules);
+
+        header('Content-Type: application/json');
+        response_json(
+            200,
+            is_numeric($id) ? true : false,
+            is_numeric($id)
+                ? 'Data berhasil dibuat'
+                : 'Gagal membuat data'
+        );
+
+    });
+    
+
+    route('GET', '/edit/{id}', function ($id) {
+        if (!is_numeric($id)) {
+            response_json(400, false, 'Invalid ID');
+            return;
+        }
+
+        $data = pdo_select_first('contents', ['id' => (int)$id], '*', [], [], 1);
+
+        view('index', [
+            'data' => $data,
+            'pagetype' => 'can_upload',
+            'content'   => 'contents/edit.tpl',
+            'pagetitle' => 'Edit Konten',
+            'pagename'  => 'edit_contents',
+            'page_js'   => 'contents.js'
+        ]);
+    });
+
+    route('PUT', '/update/{id}', function ($id) {
+        if (!is_numeric($id)) {
+            response_json(404, false, 'Invalid ID');
+            return;
+        }
+
+        $rules = [
+            'name' => 'required',
+            'status' => 'required'
+        ];
+
+        $old = pdo_select_first(
+            'contents',
+            ['id' => (int)$id, 'status' => 1],
+            '*',
+            [],
+            [],
+            1
+        );
+
+        if (!$old) {
+            response_json(404, false, 'Data tidak ditemukan');
+            return;
+        }
+
+        $page_content_bbcode = str_replace("\xc2\xa0", ' ', $_POST['full_text'] ?? '');
+        require_once("plugins/jbbcode.php");
+        $page_content_html   = parseBBCodeToHtml($page_content_bbcode);
+        preg_match('/\[img\](.*?)\[\/img\]/i', $page_content_bbcode, $match);
+
+        $data = [
+            'name'  => $_POST['name'] ?? '',
+            'slug'  => generate_unique_slug($_POST['name']),
+            "page_content_bbcode" => $page_content_bbcode ?? '',
+            "page_content_html" => $page_content_html ?? '',
+            'created_at' => date('Y-m-d H:i:s', strtotime($_POST['created_at'] ?? '')) ?? date('Y-m-d H:i:s'),
+            'status'    => $_POST['status'] ?? 0
+        ];
+
+        preg_match_all('/\[img\](.*?)\[\/img\]/i', $page_content_bbcode, $matches);
+        $imageUrls = $matches[1] ?? [];
+        $imagePaths = [];
+        foreach ($imageUrls as $url) {
+            $parsed = parse_url($url);
+
+            if (!empty($parsed['path'])) {
+                // buang slash depan jika ada
+                $path = ltrim($parsed['path'], '/');
+
+                // pastikan hanya file upload lokal
+                if (str_starts_with($path, 'public/uploads/')) {
+                    $imagePaths[] = $path;
+                }
+            }
+        }
+        foreach ($imagePaths as $path) {
+            pdo_update(
+                'uploads',
+                ['is_temp' => 0],
+                ['file_path' => $path],
+                []
+            );
+        }
+
+        $ok = pdo_update(
+            'contents',
+            $data,
+            ['id' => (int)$id],
+            $rules
+        );
+
+        header('Content-Type: application/json');
+        response_json(
+            200,
+            $ok ? true : false,
+            $ok ? 'Data berhasil diperbarui' : 'Gagal memperbarui data'
+        );
+    });
+
+    route('DELETE', '/delete/{id}', function ($id) {
+        if (!is_numeric($id)) {
+            response_json(400,false,'Invalid ID');
+            return;
+        }
+
+        $ok = pdo_softDelete('contents', ['id' => (int)$id]);
+
+        header('Content-Type: application/json');
+        response_json(
+            200,
+            $ok ? true : false,
+            $ok ? 'Data dihapus' : 'Gagal menghapus data'
+        );
+    });
+
+    route('PATCH', '/restore/{id}', function ($id) {
+        if (!is_numeric($id)) {
+            response_json(400,false,'Invalid ID');
+            return;
+        }
+
+        $ok = pdo_restore('contents', ['id' => (int)$id]);
+
+        header('Content-Type: application/json');
+        response_json(
+            200,
+            $ok ? true : false,
+            $ok ? 'Data berhasil dipulihkan' : 'Gagal restore data'
+        );
+    });
+
+}, 'requireAdmin|privilege:contents');
+
+// ==============================
+// SETTINGS
+// ==============================
+routeGroup('/settings', function () {
+
+    route('GET', '/', function () {
+        view('index', [
+            'canAccess' => canAccess('settings'),
+            'content'   => 'settings/index.tpl',
+            'pagetitle' => 'Settings',
+            'pagename'  => 'settings',
+            'page_js'   => 'settings.js'
+        ]);
+    });
+
+    route('GET', '/data', function () {
+        $page   = max(1, (int)($_GET['page'] ?? 1));
+        $limit  = 10;
+        $offset = ($page - 1) * $limit;
+        $searchText = trim($_GET['search'] ?? '');
+
+        $search = [
+            'keyword' => $searchText,
+            'columns' => ['key']
+        ];
+
+        $total = pdo_count('settings', [], $search);
+
+        $data = pdo_paginate(
+            'settings',
+            ['id','setting_group','setting_key','setting_value','type'],
+            $offset,
+            $limit,
+            [],
+            [],
+            ['setting_group' => 'ASC', 'setting_key' => 'ASC'],
+            $search
+        );
+
+        header('Content-Type: application/json');
+        echo json_encode([
+            'data' => $data,
+            'pagination' => [
+                'total'        => $total,
+                'per_page'     => $limit,
+                'current_page' => $page,
+                'last_page'    => ceil($total / $limit)
+            ]
+        ]);
+    });
+
+    route('GET', '/create', function () {
+        view('settings/create');
+    });
+
+    route('POST', '/store', function () {
+        $rules = [
+            'setting_group' => 'required',
+            'setting_key' => 'required',
+            'setting_value' => 'required',
+        ];
+
+        $value = $_POST['setting_value'] ?? '';
+
+        if (empty($value)) {
+            $type = 'null';
+        } elseif (is_numeric($value) && $value == (int)$value) {
+            $type = 'integer';
+            $value = (int)$value;  // Cast ke int
+        } elseif (is_numeric($value)) {
+            $type = 'double';  // atau 'float'
+            $value = (float)$value;
+        } elseif (is_bool(filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE))) {
+            $type = 'boolean';
+            $value = filter_var($value, FILTER_VALIDATE_BOOLEAN);
+        } else {
+            $type = 'string';
+            $value = (string)$value;
+        }
+        $data = [
+            'setting_group'  => $_POST['setting_group'] ?? '',
+            'setting_key' => strtolower($_POST['setting_key']) ?? '',
+            'type'  => $type,
+            'setting_value' => $value
+        ];
+        
+        $id = pdo_insert('settings', $data, $rules);
+
+        if (is_array($id) && isset($id['errors'])) {
+            response_json(
+                $id['errors']['code'] ?? 400,
+                false,
+                $id['errors']['message']
+            );
+            return;
+        }
+
+        response_json(
+            200,
+            true,
+            'Data berhasil dibuat'
+        );
+    });
+    
+
+    route('GET', '/edit/{id}', function ($id) {
+        if (!is_numeric($id)) {
+            response_json(400, false, 'Invalid ID');
+            return;
+        }
+
+        $data = pdo_select_first('settings', ['id' => (int)$id], '*', [], [], 1);
+
+        view('settings/edit', [
+            'data' => $data
+        ]);
+    });
+
+    route('PUT', '/update/{id}', function ($id) {
+        if (!is_numeric($id)) {
+            response_json(400, false, 'Invalid ID');
+            return;
+        }
+
+        $rules = [
+            'setting_group' => 'required',
+            'setting_key' => 'required',
+            'setting_value' => 'required',
+        ];
+
+        $value = $_POST['setting_value'] ?? '';
+
+        if (empty($value)) {
+            $type = 'null';
+        } elseif (is_numeric($value) && $value == (int)$value) {
+            $type = 'integer';
+            $value = (int)$value;  // Cast ke int
+        } elseif (is_numeric($value)) {
+            $type = 'double';  // atau 'float'
+            $value = (float)$value;
+        } elseif (is_bool(filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE))) {
+            $type = 'boolean';
+            $value = filter_var($value, FILTER_VALIDATE_BOOLEAN);
+        } else {
+            $type = 'string';
+            $value = (string)$value;
+        }
+        $data = [
+            'setting_group'  => $_POST['setting_group'] ?? '',
+            'setting_key' => strtolower($_POST['setting_key']) ?? '',
+            'type'  => $type,
+            'setting_value' => $value
+        ];
+
+        $ok = pdo_update('settings', $data, ['id' => (int)$id], $rules);
+
+        header('Content-Type: application/json');
+        response_json(
+            200,
+            $ok ? true : false,
+            $ok ? 'Data berhasil diperbarui' : 'Gagal memperbarui data'
+        );
+    });
+
+    route('DELETE', '/delete/{id}', function ($id) {
+        if (!is_numeric($id)) {
+            response_json(400, false, 'Invalid ID');
+            return;
+        }
+
+        $ok = pdo_softDelete('settings', [
+            'id'     => (int)$id,
+            'status' => 1
+        ]);
+
+        header('Content-Type: application/json');
+        response_json(
+            200,
+            $ok ? true : false,
+            $ok ? 'Data berhasil dihapus' : 'Gagal menghapus data'
+        );
+    });
+
+    route('PATCH', '/restore/{id}', function ($id) {
+        if (!is_numeric($id)) {
+            response_json(400, false, 'Invalid ID');
+            return;
+        }
+
+        $ok = pdo_restore('settings', ['id' => (int)$id]);
+
+        header('Content-Type: application/json');
+        response_json(
+            200,
+            $ok ? true : false,
+            $ok ? 'Data berhasil dipulihkan' : 'Gagal restore data'
+        );
+    });
+
+}, 'requireAdmin|privilege:settings');
+
+// ==============================
+// SUPPORTS
+// ==============================
+routeGroup('/supports', function () {
+
+    route('GET', '/', function () {
+        view('index', [
+            'content'   => 'supports/index.tpl',
+            'pagetitle' => 'Supports',
+            'pagename'  => 'supports',
+            'page_js'   => 'supports.js'
+        ]);
+    });
+
+    route('GET', '/data', function () {
+        $page   = max(1, (int)($_GET['page'] ?? 1));
+        $limit  = 10;
+        $offset = ($page - 1) * $limit;
+        $searchText = trim($_GET['search'] ?? '');
+
+        $search = [
+            'keyword' => $searchText,
+            'columns' => ['name','email','subject']
+        ];
+
+        $total = pdo_count('supports', [], $search);
+
+        $data = pdo_paginate(
+            'supports',
+            [
+                'id',
+                'name',
+                'email',
+                'subject',
+                'status',
+            ],
+            $offset,
+            $limit,
+            [],
+            [],
+            'id DESC',
+            $search
+        );
+
+        header('Content-Type: application/json');
+        echo json_encode([
+            'data' => $data,
+            'pagination' => [
+                'total'        => $total,
+                'per_page'     => $limit,
+                'current_page' => $page,
+                'last_page'    => ceil($total / $limit)
+            ]
+        ]);
+    });
+
+    route('GET', '/show/{id}', function ($id) {
+        if (!is_numeric($id)) {
+            response_json(400, false, 'Invalid ID');
+            return;
+        }
+
+        $data = pdo_select_first('supports', ['id' => (int)$id], '*', [], [], 1);
+
+        view('index', [
+            'data' => $data,
+            'pagetype' => 'can_upload',
+            'content'   => 'supports/show.tpl',
+            'pagetitle' => 'Lihat Bantuan',
+            'pagename'  => 'supports',
+            'page_js'   => 'supports.js'
+        ]);
+    });
+
+    route('PUT', '/reply/{id}', function ($id) {
+        if (!is_numeric($id)) {
+            response_json(404, false, 'Invalid ID');
+            return;
+        }
+
+        $rules = [
+            'reply' => 'required'
+        ];
+
+        $support = pdo_select_first(
+            'supports',
+            ['id' => (int)$id],
+            '*',
+            [],
+            [],
+            1
+        );
+
+        if (!$support) {
+            response_json(404, false, 'Data tidak ditemukan');
+            return;
+        }
+
+        $reply = trim($_POST['reply'] ?? '');
+
+        $data = [
+            'reply'  => $reply,
+            'status'    => 1
+        ];
+
+        // =========================
+        // KIRIM EMAIL
+        // =========================
+        $emailSent = sendEmail(
+            [$support['email'] => $support['name']],
+            'Balasan Support: ' . $support['subject'],
+            supportReplyTemplate($support, $reply)
+        );
+
+        if (!$emailSent) {
+            response_json(500, false, 'Gagal mengirim email');
+            return;
+        }
+
+        $ok = pdo_update(
+            'supports',
+            $data,
+            ['id' => (int)$id],
+            $rules
+        );
+
+        header('Content-Type: application/json');
+        response_json(
+            200,
+            $ok ? true : false,
+            $ok ? 'Balasan berhasil dikirim ke email user' : 'Gagal memperbarui data'
+        );
+    });
+
+}, 'requireAdmin|privilege:bantuan');
 
 // ==============================
 // upload image / file
@@ -2289,7 +3281,6 @@ routeGroup('/upload', function () {
 
 }, 'requireAdmin');
 
-
 // ==============================
 // AUTH
 // ==============================
@@ -2316,6 +3307,73 @@ route('GET', '/logout', function () {
     session_destroy();
     header('Location: /');
     exit;
+});
+
+// ==============================
+// API
+// ==============================
+routeGroup('/api', function () {
+
+    route('GET', '/news', function () {
+        $page   = max(1, (int)($_GET['page'] ?? 1));
+        $limit  = 10;
+        $offset = ($page - 1) * $limit;
+        $searchText = trim($_GET['search'] ?? '');
+
+        $search = [
+            'keyword' => $searchText,
+            'columns' => ['title']
+        ];
+
+        $total = pdo_count('news', [], $search);
+
+        $data = pdo_paginate(
+            'news',
+            [
+                'news.id',
+                'news.user_id',
+                'news.category_id',
+                'news.title',
+                'news.created_at',
+                'news.status',
+                'nc.name AS category_name',
+                'u.fullname AS user_name'
+            ],
+            $offset,
+            $limit,
+            [
+                [
+                    'type'  => 'LEFT',
+                    'table' => 'news_category nc',
+                    'on'    => 'news.category_id = nc.id'
+                ],
+                [
+                    'type'  => 'LEFT',
+                    'table' => 'users u',
+                    'on'    => 'news.user_id = u.id'
+                ]
+            ],
+            [],
+            'news.created_at DESC',
+            $search
+        );
+        foreach ($data as &$row) {
+            $row['created_at'] = date_format_id($row['created_at']);
+        }
+        unset($row);
+
+        header('Content-Type: application/json');
+        echo json_encode([
+            'data' => $data,
+            'pagination' => [
+                'total'        => $total,
+                'per_page'     => $limit,
+                'current_page' => $page,
+                'last_page'    => ceil($total / $limit)
+            ]
+        ]);
+    });
+
 });
 
 // ==============================
@@ -2407,11 +3465,4 @@ routeGroup('/cron', function () {
 // ==============================
 // 404 Not Found
 // ==============================
-http_response_code(404);
-view('index', [
-    'content'   => '404.tpl',
-    'pagetitle' => '404',
-    'pagename'  => '404'
-]);
-
-exit;
+abort(404);

@@ -8,6 +8,88 @@ function env($key, $default = null)
         ?? $default;
 }
 
+function csrf_token()
+{
+    $ttl = 1800; // 30 menit
+
+    if (
+        empty($_SESSION['_csrf_token']) ||
+        empty($_SESSION['_csrf_exp']) ||
+        $_SESSION['_csrf_exp'] < time()
+    ) {
+        $_SESSION['_csrf_token'] = bin2hex(random_bytes(32));
+        $_SESSION['_csrf_exp']   = time() + $ttl;
+    }
+
+    return $_SESSION['_csrf_token'];
+}
+// cara pakai lewat ajax
+// di smarty form {csrf}
+// fetch('/api/news', {
+//     method: 'POST',
+//     headers: {
+//         'X-CSRF-TOKEN': window.CSRF_TOKEN
+//     }
+// })
+// .then(r => {
+//     if (r.status === 419) {
+//         alert('Session expired, refresh halaman');
+//     }
+// });
+// const form = document.getElementById('newsForm');
+
+// fetch('/news/store', {
+//     method: 'POST',
+//     body: new FormData(form),
+//     headers: {
+//         'X-Requested-With': 'XMLHttpRequest'
+//     }
+// });
+function csrf_verify($token)
+{
+    if (
+        empty($_SESSION['_csrf_token']) ||
+        empty($_SESSION['_csrf_exp']) ||
+        $_SESSION['_csrf_exp'] < time() ||
+        empty($token) ||
+        !hash_equals($_SESSION['_csrf_token'], $token)
+    ) {
+        return false;
+    }
+
+    // Single-use (disarankan)
+    // unset($_SESSION['_csrf_token'], $_SESSION['_csrf_exp']);
+
+    return true;
+}
+function require_csrf()
+{
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        return;
+    }
+
+    $token = $_POST['_token']
+        ?? $_SERVER['HTTP_X_CSRF_TOKEN']
+        ?? null;
+
+    if (!csrf_verify($token)) {
+        http_response_code(419);
+
+        if (
+            isset($_SERVER['HTTP_ACCEPT']) &&
+            str_contains($_SERVER['HTTP_ACCEPT'], 'application/json')
+        ) {
+            echo json_encode([
+                'status'  => false,
+                'message' => 'CSRF token mismatch'
+            ]);
+        } else {
+            exit('CSRF token mismatch');
+        }
+        exit;
+    }
+}
+
 // Connecting database
 function getDBConnection() {
   static $conn = null;
@@ -36,6 +118,25 @@ function getDBConnection() {
   }
 
   return $conn;
+}
+
+function getSetting(string $key, $default = null)
+{
+    static $cache = null;
+
+    if ($cache === null) {
+        $rows = pdo_select('settings');
+        foreach ($rows as $row) {
+            $cache[$row['setting_key']] = match ($row['type']) {
+                'int'  => (int)$row['setting_value'],
+                'bool' => (bool)$row['setting_value'],
+                'json' => json_decode($row['setting_value'], true),
+                default => $row['setting_value']
+            };
+        }
+    }
+
+    return $cache[$key] ?? $default;
 }
 
 function isAdmin(): bool
@@ -90,27 +191,36 @@ function requireAdmin(): void
             ]);
             exit;
         }
-
-        http_response_code(403);
-        
-        view('index', [
-            'content'   => '403.tpl',
-            'pagetitle' => '403',
-            'pagename'  => '403'
-        ]);
-        exit;
+        abort_if(true, 403);
     }
 }
-function surl($path = '') {
-    return "/" . env('ADMIN_URL'). "/" . ltrim($path, '/');
+function canAccess(string $module): bool
+{
+    $user = currentUser();
+    if (!$user) return false;
+
+    if ((int)$user['user_group_id'] === 0) {
+        return true; // superadmin
+    }
+
+    $module = strtolower(trim($module));
+    $privs  = $_SESSION['privileges'] ?? [];
+
+    return in_array($module, $privs, true);
 }
 
+function privilegeMiddleware($module)
+{
+    if (!canAccess($module)) {
+        abort_if(true, 403);
+    }
+}
 
 function logDebug($msg = null){
-$log = "response: " . print_r($msg, true) . PHP_EOL .
-    "-------------------------" . PHP_EOL;
-//-
-file_put_contents('./log_' . date("j.n") . '.txt', $log, FILE_APPEND);
+    $log = "response: " . print_r($msg, true) . PHP_EOL .
+        "-------------------------" . PHP_EOL;
+    //-
+    file_put_contents('./log_' . date("j.n") . '.txt', $log, FILE_APPEND);
 }
 
 function readArr($msg){
@@ -312,7 +422,8 @@ function pdo_select(
     $rules = [],
     $limit = null,
     $order = null,
-    $search = [] // NEW
+    $search = [],
+    $groupBy = null // NEW
 ) {
     $conn = getDBConnection();
 
@@ -391,6 +502,17 @@ function pdo_select(
 
     if (!empty($conditions)) {
         $sql .= ' WHERE ' . implode(' AND ', $conditions);
+    }
+
+    /* ======================
+    GROUP BY
+    ====================== */
+    if ($groupBy) {
+        if (is_array($groupBy)) {
+            $sql .= ' GROUP BY ' . implode(', ', $groupBy);
+        } else {
+            $sql .= " GROUP BY {$groupBy}";
+        }
     }
 
     /* ======================
@@ -665,7 +787,17 @@ function pdo_paginate(
         // Siapkan bagian SET
         $setParts = [];
         foreach ($data as $key => $value) {
-            $setParts[] = "$key = :set_$key";
+            if (is_numeric($value) && strpos($value, '+') === 0) {
+                // Increment: +5 → views_count = views_count + 5
+                $increment = substr($value, 1);
+                $setParts[] = "$key = $key + $increment";
+            } elseif (is_numeric($value) && strpos($value, '-') === 0) {
+                // Decrement: -1 → views_count = views_count - 1
+                $decrement = substr($value, 1);
+                $setParts[] = "$key = $key - $decrement";
+            } else {
+                $setParts[] = "$key = :set_$key";
+            }
         }
         $setClause = implode(", ", $setParts);
 
@@ -682,7 +814,14 @@ function pdo_paginate(
         $stmt = $conn->prepare($sql);
 
         // Bind parameter data untuk SET dengan prefix :set_
+        $bindData = [];
         foreach ($data as $key => $value) {
+            if (strpos($value, '+') !== 0 && strpos($value, '-') !== 0) {
+                $bindData[$key] = $value;
+            }
+        }
+        
+        foreach ($bindData as $key => $value) {
             $stmt->bindValue(":set_$key", $value);
         }
 
@@ -695,6 +834,38 @@ function pdo_paginate(
         $success = $stmt->execute();
 
         return $success ? true : ['errors' => 'Update failed'];
+    }
+
+    function pdo_delete(string $table, array $where): bool
+    {
+        if (empty($where)) {
+            return false;
+        }
+
+        $conn = getDBConnection();
+        $conditions = [];
+        $params     = [];
+
+        foreach ($where as $column => $value) {
+            if (is_array($value)) {
+                // WHERE col IN (...)
+                $placeholders = [];
+                foreach ($value as $i => $v) {
+                    $key = ':' . $column . $i;
+                    $placeholders[] = $key;
+                    $params[$key] = $v;
+                }
+                $conditions[] = "$column IN (" . implode(',', $placeholders) . ")";
+            } else {
+                $key = ':' . $column;
+                $conditions[] = "$column = $key";
+                $params[$key] = $value;
+            }
+        }
+
+        $sql = "DELETE FROM {$table} WHERE " . implode(' AND ', $conditions);
+        $stmt = $conn->prepare($sql);
+        return $stmt->execute($params);
     }
 
     function pdo_softDelete(string $table, array $where): bool
@@ -898,18 +1069,337 @@ function pdo_paginate(
         return $logId;
     }
     
-    function slugify($text){
-        $text = preg_replace('~[^\pL\d]+~u', '-', $text);
-        $text = iconv('utf-8', 'us-ascii//TRANSLIT', $text);
-        $text = preg_replace('~[^-\w]+~', '', $text);
-        $text = trim($text, '-');
-        $text = preg_replace('~-+~', '-', $text);
-        $text = strtoupper($text);
-        if (empty($text)) {
-            return 'n-a';
+    function showBBcodes($text) {
+        $text = stripslashes($text);
+        include_once 'libs/cbparser/cbparser.php';
+        $cbparser = new cbparser();
+        $converted = $cbparser->bb2html($text);
+        if($converted == ''){
+            $converted = "tags don't balance!\n\nin other words, you have opened a tag, but not closed it, or something..\ngo back and try again!";
+        }else{
+            return $converted;
         }
-        return $text;
     }
+    function generate_unique_slug(string $title, int $id = 0): string
+    {
+        $slug = strtolower(slugify($title));
+        $base = $slug;
+        $i = 1;
+
+        while (
+            pdo_select_first(
+                'news',
+                ['slug' => $slug, 'id !=' => $id]
+            )
+        ) {
+            $slug = $base . '-' . $i++;
+        }
+
+        return $slug;
+    }
+    function slugify($text)
+    {
+        $text = iconv('UTF-8', 'ASCII//TRANSLIT', $text);
+        $text = strtolower($text);
+        $text = preg_replace('~[^a-z0-9]+~', '-', $text);
+        return trim($text, '-');
+    }
+
+    function normalize_tag(string $text): string
+    {
+        $text = mb_strtolower($text);
+        $text = preg_replace('/[^a-z0-9\s]/u', '', $text);
+        $text = trim($text);
+
+        return preg_replace('/\s+/', ' ', $text);
+    }
+
+    function tag_slug(string $tag): string
+    {
+        return trim(preg_replace('/\s+/', '-', $tag), '-');
+    }
+    function extract_title_tags(string $title): array
+    {
+        $stopwords = array(
+            'dan', 'di', 'ke', 'dari', 'yang', 'ini', 'itu', 'adalah', 'dan', 'atau', 'dalam', 'pada', 'dengan', 'untuk', 'dari', 'oleh', 'akan', 'juga', 'adalah', 'the', 'and', 'for', 'are', 'but', 'not', 'you', 'all', 'can', 'had', 'her', 'was', 'one', 'our', 'out', 'day', 'get'
+        );
+
+        $title = normalize_tag($title);
+        $words = explode(' ', $title);
+
+        $tags = [];
+
+        foreach ($words as $word) {
+            if (mb_strlen($word) < 4) continue;
+            if (in_array($word, $stopwords)) continue;
+
+            $tags[$word] = ($tags[$word] ?? 0) + 1;
+        }
+
+        return $tags; // ['berita' => 2, 'nasional' => 1]
+    }
+    function sync_news_tags(int $news_id, string $title): void
+    {
+        $tags = extract_title_tags($title);
+
+        // Hapus tag lama
+        pdo_delete('news_tags', ['news_id' => $news_id]);
+
+        foreach ($tags as $tag => $weight) {
+
+            $slug = tag_slug($tag);
+
+            // Ambil / buat tag
+            $row = pdo_select_first('tags', ['slug' => $slug]);
+
+            if (!$row) {
+                $tag_id = pdo_insert('tags', [
+                    'name' => $tag,
+                    'slug' => $slug
+                ]);
+            } else {
+                $tag_id = $row['id'];
+            }
+
+            // Relasi
+            pdo_insert('news_tags', [
+                'news_id' => $news_id,
+                'tag_id'  => $tag_id,
+                'weight'  => $weight
+            ]);
+        }
+    }
+
+
+function is_login_blocked(string $email, string $ip): bool
+{
+    $row = pdo_select_first(
+        'user_login_attempts',
+        ['email' => $email, 'ip' => $ip],
+        '*'
+    );
+
+    if (!$row) {
+        return false;
+    }
+
+    if ($row['blocked_until'] && strtotime($row['blocked_until']) > time()) {
+        return true;
+    }
+
+    return false;
+}
+function record_login_failure(string $email, string $ip)
+{
+    $maxAttempts = 5;
+    $window      = 300; // 5 menit
+    $now         = time();
+
+    $row = pdo_select_first(
+        'user_login_attempts',
+        ['email' => $email, 'ip' => $ip],
+        '*'
+    );
+
+    if (!$row) {
+        pdo_insert('user_login_attempts', [
+            'email'        => $email,
+            'ip'           => $ip,
+            'attempts'     => 1,
+            'last_attempt' => date('Y-m-d H:i:s')
+        ], []);
+        return;
+    }
+
+    $last = strtotime($row['last_attempt']);
+
+    // reset window
+    if (($now - $last) > $window) {
+        pdo_update('user_login_attempts', [
+            'attempts'     => 1,
+            'last_attempt' => date('Y-m-d H:i:s'),
+            'blocked_until'=> null
+        ], ['id' => $row['id']]);
+        return;
+    }
+
+    $attempts = $row['attempts'] + 1;
+
+    $data = [
+        'attempts'     => $attempts,
+        'last_attempt' => date('Y-m-d H:i:s')
+    ];
+
+    if ($attempts >= $maxAttempts) {
+        $data['blocked_until'] = date('Y-m-d H:i:s', $now + $window);
+    }
+
+    pdo_update('user_login_attempts', $data, ['id' => $row['id']]);
+}
+function clear_login_attempts(string $email, string $ip)
+{
+    pdo_delete('user_login_attempts', [
+        'email' => $email,
+        'ip'    => $ip
+    ]);
+}
+
+function newsletter_token(): string
+{
+    return hash('sha256', random_bytes(32));
+}
+function newsletter_valid_email(string $email): bool
+{
+    return filter_var($email, FILTER_VALIDATE_EMAIL) !== false;
+}
+function newsletter_subscribe(string $email): array
+{
+    if (!newsletter_valid_email($email)) {
+        return ['status' => false, 'message' => 'Email tidak valid'];
+    }
+
+    $exists = pdo_select_first(
+        'newsletter_subscribers',
+        ['email' => $email]
+    );
+
+    if ($exists) {
+        if ($exists['status'] === 'active') {
+            return ['status' => false, 'message' => 'Email sudah terdaftar'];
+        }
+        if ($exists['status'] === 'pending') {
+            return ['status' => true, 'message' => 'Silakan cek email Anda'];
+        }
+    }
+
+    $token = newsletter_token();
+
+    pdo_insert('newsletter_subscribers', [
+        'email'       => $email,
+        'token'       => $token,
+        'status'      => 'active', // pending if double opt-in
+        'ip_address'  => getRealIpAddr(),
+        'user_agent'  => $_SERVER['HTTP_USER_AGENT'] ?? ''
+    ]);
+
+    // Kirim email konfirmasi (double opt-in)
+    // newsletter_send_confirm($email, $token);
+    // return ['status' => true, 'message' => 'Silakan cek email untuk konfirmasi'];
+    return ['status' => true, 'message' => 'Anda berhasil terdaftar sebagai subscriber'];
+}
+function newsletter_confirm(string $token): bool
+{
+    $row = pdo_select_first(
+        'newsletter_subscribers',
+        ['token' => $token, 'status' => 'pending']
+    );
+
+    if (!$row) {
+        return false;
+    }
+
+    pdo_update(
+        'newsletter_subscribers',
+        ['status' => 'active'],
+        ['id' => $row['id']]
+    );
+
+    return true;
+}
+function newsletter_unsubscribe(string $token): bool
+{
+    $row = pdo_select_first(
+        'newsletter_subscribers',
+        ['token' => $token, 'status' => 'active']
+    );
+
+    if (!$row) {
+        return false;
+    }
+
+    pdo_update(
+        'newsletter_subscribers',
+        [
+            'status' => 'unsubscribed',
+            'unsubscribed_at' => date('Y-m-d H:i:s')
+        ],
+        ['id' => $row['id']]
+    );
+
+    return true;
+}
+function newsletter_send_confirm(string $email, string $token): void
+{
+    $url = env('BASE_URL')."/newsletter/confirm/".$token;
+
+    $subject = "Konfirmasi Newsletter";
+    $message = "
+        <p>Terima kasih telah berlangganan.</p>
+        <p>Klik link berikut untuk konfirmasi:</p>
+        <a href='{$url}'>{$url}</a>
+    ";
+
+    // send_mail($email, $subject, $message);
+}
+function newsletter_send_broadcast(string $subject, string $content): int
+{
+    $subs = pdo_select(
+        'newsletter_subscribers',
+        ['status' => 'active'],
+        ['email', 'token']
+    );
+
+    $sent = 0;
+
+    foreach ($subs as $s) {
+        $unsubscribe = env('BASE_URL')."newsletter/unsubscribe/".$s['token'];
+
+        $body = $content . "<hr>
+            <small>
+                <a href='{$unsubscribe}'>Unsubscribe</a>
+            </small>";
+
+        // if (send_mail($s['email'], $subject, $body)) {
+        //     $sent++;
+        // }
+    }
+
+    pdo_insert('newsletter_logs', [
+        'subject' => $subject,
+        'total_sent' => $sent
+    ]);
+
+    return $sent;
+}
+
+// ==============================
+// REQUEST ERROR
+// ==============================
+function abort_if(bool $condition, int $code = 404, array $data = []): void
+{
+    if ($condition) {
+        abort($code, $data);
+    }
+}
+function abort(int $code = 404, array $data = []): void
+{
+    http_response_code($code);
+
+    $views = [
+        403 => '403.tpl',
+        404 => '404.tpl',
+        500 => '500.tpl',
+    ];
+
+    view('index_error', array_merge([
+        'content'   => $views[$code] ?? '404.tpl',
+        'pagetitle' => (string) $code,
+        'pagename'  => (string) $code
+    ], $data));
+
+    exit;
+}
+
 
 // ==============================
 // REQUEST INFO
@@ -960,8 +1450,33 @@ function route($httpMethod, $path, $callback)
     if (preg_match($pattern, $uri, $matches)) {
 
         foreach ($routeGroupMiddleware as $mw) {
-            $mw();
+
+            // callable middleware
+            if (is_callable($mw)) {
+                $mw();
+                continue;
+            }
+
+            // string middleware
+            if (is_string($mw)) {
+
+                // privilege:module
+                if (str_starts_with($mw, 'privilege:')) {
+                    $module = substr($mw, 10);
+                    privilegeMiddleware($module);
+                    continue;
+                }
+
+                // named middleware
+                if (function_exists($mw)) {
+                    call_user_func($mw);
+                    continue;
+                }
+
+                throw new Exception("Middleware {$mw} tidak ditemukan");
+            }
         }
+
 
         $params = array_filter(
             $matches,
@@ -980,25 +1495,32 @@ function route($httpMethod, $path, $callback)
 $routeGroupPrefix = '';
 $routeGroupMiddleware = [];
 
-function routeGroup(string $prefix, callable $callback, callable $middleware = null)
+function routeGroup(string $prefix, callable $callback, $middleware = null)
 {
     global $routeGroupPrefix, $routeGroupMiddleware;
 
-    $previousPrefix = $routeGroupPrefix;
+    $previousPrefix     = $routeGroupPrefix;
     $previousMiddleware = $routeGroupMiddleware;
 
     $prefix = '/' . trim($prefix, '/');
     $routeGroupPrefix .= $prefix;
 
     if ($middleware) {
-        $routeGroupMiddleware[] = $middleware;
+        if (is_string($middleware)) {
+            foreach (explode('|', $middleware) as $mw) {
+                $routeGroupMiddleware[] = trim($mw);
+            }
+        } elseif (is_callable($middleware)) {
+            $routeGroupMiddleware[] = $middleware;
+        }
     }
 
     $callback();
 
-    $routeGroupPrefix = $previousPrefix;
+    $routeGroupPrefix     = $previousPrefix;
     $routeGroupMiddleware = $previousMiddleware;
 }
+
 
 // ==============================
 // VIEW HELPER

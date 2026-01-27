@@ -5,8 +5,9 @@
 	<div class="col-12">
 		<div class="page-title-head d-flex align-items-sm-center flex-sm-row flex-column">
 			<div class="flex-grow-1">
-				<h4 class="fs-18 text-uppercase fw-bold m-0">{$pagename}</h4>
+				<h4 class="fs-18 text-uppercase fw-bold m-0">{$pagetitle}</h4>
 			</div>
+            <div class="text-end"><a href="{'news'|surl}" class="btn btn-sm btn-outline-dark"><i class="ti ti-arrow-left align-middle me-1"></i> kembali</a></div>
 		</div><!-- end card header -->
 	</div>
 	<!--end col-->
@@ -15,7 +16,7 @@
     <div class="col-12">
         <div class="card">
             <div class="card-header border-bottom border-dashed d-flex align-items-center">
-                <h4 class="header-title">{$pagename}</h4>
+                <h4 class="header-title">{$pagetitle}</h4>
             </div>
 
             <div class="card-body">

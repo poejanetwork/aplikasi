@@ -1,18 +1,18 @@
 <?php
-/* Smarty version 5.5.1, created on 2025-11-01 20:36:13
+/* Smarty version 5.5.1, created on 2026-01-27 14:58:46
   from 'file:footer.tpl' */
 
 /* @var \Smarty\Template $_smarty_tpl */
 if ($_smarty_tpl->getCompiled()->isFresh($_smarty_tpl, array (
   'version' => '5.5.1',
-  'unifunc' => 'content_69060ccda14eb5_25123242',
+  'unifunc' => 'content_69787036af0790_58021642',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
     '80fcaa87d5bdb025772b516647f4e58b94861853' => 
     array (
       0 => 'footer.tpl',
-      1 => 1762004143,
+      1 => 1769500725,
       2 => 'file',
     ),
   ),
@@ -20,88 +20,31 @@ if ($_smarty_tpl->getCompiled()->isFresh($_smarty_tpl, array (
   array (
   ),
 ))) {
-function content_69060ccda14eb5_25123242 (\Smarty\Template $_smarty_tpl) {
+function content_69787036af0790_58021642 (\Smarty\Template $_smarty_tpl) {
 $_smarty_current_dir = 'C:\\xampp\\htdocs\\apli.kasi\\theme\\default\\templates';
 ?>
  <section id="footer" class="pt-5 pb-5 bg_black">
    <div class="container-xl">
-     <div class="row row-cols-1 row-cols-md-4">
+     <div class="row row-cols-1 row-cols-md-2">
 	    <div class="col">
 		  <div class="footer_left">
-		    <b class="fs-4  d-block text-uppercase text-white center_sm"> <i class="fa-brands fa-nfc-directional col_yellow me-1"></i> Popular News</b>
-			<p class="gray_dark mt-3">Your source for the lifestyle news. This demo is crafted specifically to exhibit the use of the theme as a lifestyle site. Visit our main page for more demos.</p>
+		    <b class="fs-4  d-block text-uppercase text-white center_sm"> <img src="<?php echo $_smarty_tpl->getValue('theme');?>
+/assets/image/logo.png" class="me-1" width="55" height="56"> <?php echo $_smarty_tpl->getValue('settings')['APP_NAME'];?>
+</b>
+			<p class="gray_dark mt-3"><?php echo $_smarty_tpl->getValue('settings')['APP_DESCRIPTION'];?>
+</p>
 			<p class="gray_dark">We're accepting new partnerships right now.</p>
-			<ul class="gray_dark font_12">
-		    <li class="d-flex"><span class="text-white me-3">Email Us:</span> info@example.com</li>
-			<li class="d-flex mt-1"><span class="text-white me-3">Contact:</span>  +1-234-0123-431</li>
-		   </ul>
 		   <ul class="mb-0 d-flex social mt-3">
-		  <li><a class="d-block rounded-circle text-center text-white  link" href="#"><i class="fa-brands fa-facebook-f"></i></a></li>
-		  <li class="ms-2"><a class="d-block rounded-circle text-center text-white link" href="#"><i class="fa-brands fa-youtube"></i></a></li>
-		   <li class="ms-2"><a class="d-block rounded-circle text-center text-white link" href="#"><i class="fa-brands fa-x"></i></a></li>
-		   <li class="ms-2"><a class="d-block rounded-circle text-center text-white link" href="#"><i class="fa-brands fa-pinterest"></i></a></li>
-		   <li class="ms-2"><a class="d-block rounded-circle text-center text-white link" href="#"><i class="fa-brands fa-instagram"></i></a></li>
+		  <li><a class="d-block rounded-circle text-center text-white  link" href="<?php echo $_smarty_tpl->getValue('settings')['FACEBOOK'];?>
+" target="_blank"><i class="fa-brands fa-facebook-f"></i></a></li>
+		  <li class="ms-2"><a class="d-block rounded-circle text-center text-white link" href="<?php echo $_smarty_tpl->getValue('settings')['YOUTUBE'];?>
+" target="_blank"><i class="fa-brands fa-youtube"></i></a></li>
+		   <li class="ms-2"><a class="d-block rounded-circle text-center text-white link" href="<?php echo $_smarty_tpl->getValue('settings')['TWITTER'];?>
+" target="_blank"><i class="fa-brands fa-x"></i></a></li>
+		   <li class="ms-2"><a class="d-block rounded-circle text-center text-white link" href="<?php echo $_smarty_tpl->getValue('settings')['INSTAGRAM'];?>
+" target="_blank"><i class="fa-brands fa-instagram"></i></a></li>
 		</ul>
 		  </div>
-		</div>
-		<div class="col">
-		  <div class="footer_left">
-		    <b class="text-uppercase text-white font_13 d-block mb-4 mt-2 center_sm">Contact Info</b>
-			<p class="gray_dark">quasi, eum. class corporis nostra rem voluptatibus habitant? Fames, vivamus minim nemo enim, gravida lobortis quasi, eum.</p>
-			<ul class="mb-0 font_10 mt-4">
-			    <li class="d-flex text-uppercase">
-				 <span class="col_yellow fs-4 d-inline-block me-3 lh-1 mt-1">
-				   <i class="fa fa-user"></i>
-				 </span>
-				  <span class="flex-column">
-				   <b class="text-white">Join our Team</b>
-				   <span class="text-white-50 d-block">info@gmail.com</span>
-				 </span>
-				</li>
-				<li class="d-flex text-uppercase mt-4">
-				 <span class="col_yellow fs-4 d-inline-block me-3 lh-1 mt-1">
-				   <i class="fa fa-map-location"></i>
-				 </span>
-				  <span class="flex-column">
-				   <b class="text-white">Contact Us</b>
-				   <span class="text-white-50 d-block">info@gmail.com</span>
-				 </span>
-				</li>
-				<li class="d-flex text-uppercase mt-4">
-				 <a class="text-white-50" href="#"><i class="fa-brands fa-facebook-f text-white me-1"></i> Facebook</a>
-				 <a class="text-white-50 mx-2" href="#"><i class="fa-brands fa-twitter text-white me-1"></i> Twitter</a>
-				  <a class="text-white" href="#"><i class="fa-brands fa-google-plus-g col_yellow me-1"></i> Google+</a>
-				</li>
-			  </ul>
-		 </div>
-		</div>
-		<div class="col">
-		  <div class="footer_left">
-		    <b class="text-uppercase text-white font_13 d-block mb-4 mt-2 center_sm">Popular News</b>
-		<ul class="mb-0">
-		     <li class="d-flex">
-			   <span class="flex-column">
-			     <span class="d-inline-block bg_yellow text-white p-1 px-3 font_10 rounded-3 text-uppercase">The Team</span>
-				 <b class="d-block  text-uppercase"><a class="font_11 text-white" href="#">We are a Temple that belives in God and the followers</a></b>
-				 <span class="gray_dark font_10">Aug 13, 2016</span>
-			   </span>
-			 </li>
-			 <li class="d-flex mt-2">
-			   <span class="flex-column">
-			     <span class="d-inline-block bg-primary text-white p-1 px-3 font_10 rounded-3 text-uppercase">Injuries</span>
-				 <b class="d-block  text-uppercase"><a class="font_11 text-white" href="#">We are a Temple that belives in God and the followers</a></b>
-				 <span class="gray_dark font_10">Aug 13, 2016</span>
-			   </span>
-			 </li>
-			 <li class="d-flex mt-2">
-			   <span class="flex-column">
-			     <span class="d-inline-block bg-danger text-white p-1 px-3 font_10 rounded-3 text-uppercase">Sport</span>
-				 <b class="d-block  text-uppercase"><a class="font_11 text-white" href="#">We are a Temple that belives in God and the followers</a></b>
-				 <span class="gray_dark font_10">Aug 13, 2016</span>
-			   </span>
-			 </li>
-		   </ul>
-		 </div>
 		</div>
 		<div class="col">
 		  <div class="footer_left">
@@ -137,31 +80,45 @@ $_smarty_current_dir = 'C:\\xampp\\htdocs\\apli.kasi\\theme\\default\\templates'
     <div class="container-fluid p-0">
      	 <div class="row mx-0">
 	       <div class="col-md-2 p-0">
-		     <div class="footer_bottom_left bg_yellow p-4 position-relative">
+		     <div class="footer_bottom_left bg_blue p-4 position-relative">
 			    
 			 </div>
 		   </div>
 		   <div class="col-md-8 p-0">
 		     <div class="footer_bottom_center">
 			      <ul class="mb-0 text-uppercas d-flex justify-content-center font_10 text-uppercase fw-bold flex-wrap">
-				   <li><a class="d-block" href="#">Home</a></li>
-				   <li><a class="d-block active" href="#">Features</a></li>
-				   <li><a class="d-block" href="#">Statistics</a></li>
-				   <li><a class="d-block" href="#">The Team</a></li>
-				   <li><a class="d-block" href="#">News</a></li>
-				   <li><a class="d-block" href="#">Shop</a></li>
+				   <li><a class="d-block" href="<?php echo $_smarty_tpl->getValue('settings')['BASE_URL'];?>
+">Home</a></li>
+				   <li><a class="d-block" href="<?php echo $_smarty_tpl->getSmarty()->getModifierCallback('surl')('contact');?>
+">Kontak</a></li>
 				  </ul>
 			 </div>
 		   </div>
 		   <div class="col-md-2 p-0">
-		     <div class="footer_bottom_right bg_yellow p-4 position-relative">
+		     <div class="footer_bottom_right bg_blue p-4 position-relative">
 			    
 			 </div>
 		   </div>
 		 </div>
 	</div>
    </section>
-		
+
+<div class="toast-container position-fixed top-0 end-0 p-3">
+    <div id="appToast" class="toast align-items-center text-dark border-0" role="alert" aria-live="assertive" aria-atomic="true">
+		<div class="toast-header">
+			<strong class="me-auto" id="appToastTitle">Notifikasi</strong>
+			<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+		</div>
+		<div class="toast-body" id="appToastBody">
+			Message
+		</div>
+    </div>
+</div>
+
+
+<?php echo '<script'; ?>
+ src="https://code.jquery.com/jquery-4.0.0.min.js" integrity="sha256-OaVG6prZf4v69dPg6PhVattBXkcOWQB62pdZ3ORyrao=" crossorigin="anonymous"><?php echo '</script'; ?>
+>
 <?php echo '<script'; ?>
  src="<?php echo $_smarty_tpl->getValue('theme');?>
 /assets/js/bootstrap.bundle.min.js"><?php echo '</script'; ?>
@@ -170,6 +127,13 @@ $_smarty_current_dir = 'C:\\xampp\\htdocs\\apli.kasi\\theme\\default\\templates'
  src="<?php echo $_smarty_tpl->getValue('theme');?>
 /assets/js/theme.min.js"><?php echo '</script'; ?>
 >
+<?php if ((true && ($_smarty_tpl->hasVariable('page_js') && null !== ($_smarty_tpl->getValue('page_js') ?? null)))) {
+echo '<script'; ?>
+ src="<?php echo $_smarty_tpl->getValue('theme');?>
+/assets/js/pages/<?php echo $_smarty_tpl->getValue('page_js');?>
+"><?php echo '</script'; ?>
+>
+<?php }?>
 
 </body>
 </html><?php }
